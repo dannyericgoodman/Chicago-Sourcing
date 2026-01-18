@@ -93,4 +93,4 @@ class AutoEnricher:
                     response = requests.get(prospect['blog'], headers=self.headers, timeout=5)
                     linkedin_match = re.search(r'linkedin\.com/in/([a-zA-Z0-9-]+)', response.text)
                     if linkedin_match:
-                        return f"https://linkedin
+                        return f"https://linkedin.com/in/{linkedin_match.group(1)}"
