@@ -20,6 +20,9 @@ from src.scoring.claude_scorer import ClaudeScorer
 from src.storage.sheets_db import GoogleSheetsDB
 from src.output.slack_notify import SlackNotifier
 
+# Create logs directory if it doesn't exist
+os.makedirs('logs', exist_ok=True)
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
@@ -179,9 +182,6 @@ class SourcingEngine:
 
 def main():
     """Entry point"""
-    # Create logs directory if it doesn't exist
-    os.makedirs('logs', exist_ok=True)
-
     # Run the engine
     engine = SourcingEngine()
     engine.run()
