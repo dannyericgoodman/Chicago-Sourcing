@@ -23,9 +23,13 @@ class GoogleSheetsDB:
             creds_json = os.getenv('GOOGLE_CREDENTIALS_JSON')
             if not creds_json:
                 raise ValueError("GOOGLE_CREDENTIALS_JSON environment variable not set")
-            
+
             # Parse JSON credentials
             creds_dict = json.loads(creds_json)
+
+            # Fix escaped newlines in private key if needed
+            if 'private_key' in creds_dict and '\\n' in creds_dict['private_key']:
+                creds_dict['private_key'] = creds_dict['private_key'].replace('\\n', '\n')
             
             # Create credentials
             scopes = [
