@@ -1,0 +1,78 @@
+# Chicago Founder Sourcing Engine Configuration
+# FULLY AUTOMATED MODE - You just review results in Google Sheets!
+
+# Target geography
+location:
+  city: "Chicago"
+  state: "Illinois"
+  include_remote: true
+
+# Automation settings - HANDS OFF MODE!
+automation:
+  auto_enrich: true    # Automatically enrich all prospects with free sources
+  auto_score: true     # Automatically score all prospects with Claude
+  hands_off: true      # You just review results in Google Sheets!
+
+# Investment thesis - used for AI scoring
+thesis:
+  stage: "Pre-seed to Seed"
+  check_size: "$250K - $1M"
+  focus_areas:
+    - "B2B SaaS"
+    - "Developer tools"
+    - "AI/ML applications"
+    - "Infrastructure"
+    - "Productivity tools"
+  
+  founder_qualities:
+    - "Technical founder (can build the product)"
+    - "Domain expertise"
+    - "Clear articulation of problem"
+    - "Scrappy/resourceful"
+    - "Chicago/Midwest connection"
+
+# Data sources to scrape
+sources:
+  twitter:
+    enabled: true
+    keywords:
+      - "building in public chicago"
+      - "startup founder chicago"
+      - "YC S24 chicago"
+      - "just launched chicago"
+    max_results: 50
+
+  github:
+    enabled: true
+    location: "Chicago"
+    min_followers: 10
+    language: "Python,JavaScript,TypeScript,Go"
+    max_results: 50
+
+  hackernews:
+    enabled: true
+    keywords:
+      - "Show HN"
+      - "Launch HN"
+    chicago_only: false
+    max_results: 30
+
+  producthunt:
+    enabled: true
+    max_products: 20
+
+# Scoring weights (used by Claude)
+scoring:
+  weights:
+    founder_quality: 0.30
+    thesis_fit: 0.30
+    timing: 0.20
+    signal_strength: 0.20
+
+# Output settings
+output:
+  google_sheets:
+    enabled: true
+  
+  slack:
+    enabled: false  # You don't use Slack
