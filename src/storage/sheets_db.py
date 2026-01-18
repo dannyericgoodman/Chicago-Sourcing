@@ -160,4 +160,5 @@ class GoogleSheetsDB:
             records = self.worksheet.get_all_records()
             return records
         except Exception as e:
-            logger.error(f"Error getting prospects
+            logger.error(f"Error getting prospects: {str(e)}")
+            return []
