@@ -129,7 +129,7 @@ class SourcingEngine:
                     logger.info(f"⚠️  Duplicate - already in database")
 
             except Exception as e:
-                logger.error(f"❌ Error processing prospect: {str(e)}")
+                logger.error(f"❌ Error processing prospect: {str(e)}", exc_info=True)
                 continue
 
         return stats

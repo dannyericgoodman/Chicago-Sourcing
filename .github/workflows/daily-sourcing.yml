@@ -24,6 +24,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Clear Python cache
+        run: |
+          find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+          find . -name "*.pyc" -delete 2>/dev/null || true
+          echo "✅ Cleared Python cache"
+
+      - name: Verify code version
+        run: |
+          echo "Checking auto_enrich.py for fixes..."
+          grep -c "isinstance(signal, str)" src/enrichment/auto_enrich.py || echo "❌ Fix not found!"
+          echo "Checking sheets_db.py for fixes..."
+          grep -c "Convert signals list to string" src/storage/sheets_db.py || echo "❌ Fix not found!"
+
       - name: Run sourcing engine (fully automated)
         env:
           GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
