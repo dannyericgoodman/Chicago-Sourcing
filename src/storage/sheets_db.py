@@ -101,6 +101,11 @@ class GoogleSheetsDB:
                 logger.info(f"Duplicate prospect: {prospect.get('name')}")
                 return False
             
+            # Convert signals list to string if needed
+            signals = prospect.get('signals', '')
+            if isinstance(signals, list):
+                signals = ' | '.join(str(s) for s in signals if s)
+
             # Prepare row data
             row = [
                 datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
@@ -115,7 +120,7 @@ class GoogleSheetsDB:
                 prospect.get('blog', prospect.get('website', '')),
                 prospect.get('source', ''),
                 prospect.get('bio', '')[:500],  # Limit bio length
-                prospect.get('signals', ''),
+                signals,
                 prospect.get('overall_score', ''),
                 prospect.get('founder_score', ''),
                 prospect.get('thesis_fit_score', ''),

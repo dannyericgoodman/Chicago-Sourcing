@@ -90,25 +90,19 @@ class AutoEnricher:
         # Check signals for email mentions
         signals = prospect.get('signals', [])
         for signal in signals:
-            signal_data = signal.get('signal_data', {})
-
-            # Check tweet text
-            tweet_text = signal_data.get('tweet_text', '')
-            email = self._extract_email_from_text(tweet_text)
-            if email:
-                return email
-
-            # Check HN comment
-            comment = signal_data.get('comment', '')
-            email = self._extract_email_from_text(comment)
-            if email:
-                return email
-
-            # Check GitHub bio
-            bio = signal_data.get('github_bio', '')
-            email = self._extract_email_from_text(bio)
-            if email:
-                return email
+            # Handle signals as strings (they're just text snippets)
+            if isinstance(signal, str):
+                email = self._extract_email_from_text(signal)
+                if email:
+                    return email
+            # Legacy support if signals are dicts
+            elif isinstance(signal, dict):
+                signal_data = signal.get('signal_data', {})
+                for field in ['tweet_text', 'comment', 'github_bio', 'text']:
+                    text = signal_data.get(field, '')
+                    email = self._extract_email_from_text(text)
+                    if email:
+                        return email
 
         return None
 
@@ -138,14 +132,19 @@ class AutoEnricher:
         # Check signals
         signals = prospect.get('signals', [])
         for signal in signals:
-            signal_data = signal.get('signal_data', {})
-
-            # Check various text fields
-            for field in ['tweet_text', 'comment', 'github_bio', 'text']:
-                text = signal_data.get(field, '')
-                linkedin = self._extract_linkedin_from_text(text)
+            # Handle signals as strings (they're just text snippets)
+            if isinstance(signal, str):
+                linkedin = self._extract_linkedin_from_text(signal)
                 if linkedin:
                     return linkedin
+            # Legacy support if signals are dicts
+            elif isinstance(signal, dict):
+                signal_data = signal.get('signal_data', {})
+                for field in ['tweet_text', 'comment', 'github_bio', 'text']:
+                    text = signal_data.get(field, '')
+                    linkedin = self._extract_linkedin_from_text(text)
+                    if linkedin:
+                        return linkedin
 
         return None
 
@@ -197,22 +196,27 @@ class AutoEnricher:
         # Check signals for mentions of current role
         signals = prospect.get('signals', [])
         for signal in signals:
-            signal_data = signal.get('signal_data', {})
+            text = ''
 
-            # Look for "I'm a [title] at [company]" patterns
-            for field in ['tweet_text', 'comment', 'github_bio', 'text']:
-                text = signal_data.get(field, '')
-                if not text:
-                    continue
+            # Handle signals as strings (they're just text snippets)
+            if isinstance(signal, str):
+                text = signal
+            # Legacy support if signals are dicts
+            elif isinstance(signal, dict):
+                signal_data = signal.get('signal_data', {})
+                for field in ['tweet_text', 'comment', 'github_bio', 'text']:
+                    text = signal_data.get(field, '')
+                    if text:
+                        break
 
-                # Pattern: "Senior Engineer at Stripe"
-                match = re.search(r'([\w\s]+(?:Engineer|Developer|Designer|PM|Manager|Director|Founder|CEO|CTO))[\s@]+at[\s@]+([\w\s]+)', text, re.IGNORECASE)
-                if match:
-                    title = match.group(1).strip()
-                    company = match.group(2).strip()
-                    break
+            if not text:
+                continue
 
-            if company and title:
+            # Pattern: "Senior Engineer at Stripe"
+            match = re.search(r'([\w\s]+(?:Engineer|Developer|Designer|PM|Manager|Director|Founder|CEO|CTO))[\s@]+at[\s@]+([\w\s]+)', text, re.IGNORECASE)
+            if match:
+                title = match.group(1).strip()
+                company = match.group(2).strip()
                 break
 
         return company, title
