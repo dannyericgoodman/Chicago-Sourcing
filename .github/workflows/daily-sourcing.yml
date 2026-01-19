@@ -45,6 +45,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: python main.py
 
+      - name: Upload prospects CSV
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prospects-csv
+          path: prospects.csv
+          retention-days: 90
+
       - name: Upload logs
         if: always()
         uses: actions/upload-artifact@v4
@@ -53,6 +61,11 @@ jobs:
           path: logs/
           retention-days: 30
 
-      - name: Log completion
+      - name: Show results summary
         if: always()
-        run: echo "Check Google Sheet for results"
+        run: |
+          echo "✅ Sourcing complete!"
+          echo "📊 Download prospects.csv from the Artifacts section above"
+          if [ -f prospects.csv ]; then
+            echo "📈 Prospects found: $(tail -n +2 prospects.csv | wc -l)"
+          fi

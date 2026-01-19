@@ -17,7 +17,8 @@ from src.scrapers.hn_scraper import HackerNewsScraper
 from src.scrapers.producthunt_scraper import ProductHuntScraper
 from src.enrichment.auto_enrich import AutoEnricher
 from src.scoring.claude_scorer import ClaudeScorer
-from src.storage.sheets_db import GoogleSheetsDB
+from src.storage.csv_db import CSVDatabase
+# from src.storage.sheets_db import GoogleSheetsDB  # Disabled - using CSV instead
 from src.output.slack_notify import SlackNotifier
 
 # Create logs directory if it doesn't exist
@@ -66,7 +67,7 @@ class SourcingEngine:
         self.scrapers = self._init_scrapers()
         self.enricher = AutoEnricher()
         self.scorer = ClaudeScorer()
-        self.db = GoogleSheetsDB()
+        self.db = CSVDatabase('prospects.csv')  # Simple CSV output
         self.slack = SlackNotifier()
 
         logger.info("✅ All components initialized")
