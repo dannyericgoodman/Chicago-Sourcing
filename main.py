@@ -23,6 +23,22 @@ from src.output.slack_notify import SlackNotifier
 # Create logs directory if it doesn't exist
 os.makedirs('logs', exist_ok=True)
 
+# Verify code version - check that fixes are present
+print("🔍 Verifying code version...")
+with open('src/enrichment/auto_enrich.py', 'r') as f:
+    auto_enrich_code = f.read()
+    if 'isinstance(signal, str)' in auto_enrich_code:
+        print("✅ auto_enrich.py fix verified")
+    else:
+        print("❌ WARNING: auto_enrich.py fix NOT FOUND!")
+
+with open('src/storage/sheets_db.py', 'r') as f:
+    sheets_code = f.read()
+    if 'Convert signals list to string' in sheets_code:
+        print("✅ sheets_db.py fix verified")
+    else:
+        print("❌ WARNING: sheets_db.py fix NOT FOUND!")
+
 # Set up logging
 logging.basicConfig(
     level=logging.INFO,
