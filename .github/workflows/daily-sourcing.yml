@@ -45,6 +45,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: python main.py
 
+      - name: Upload HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-founder-report
+          path: daily_report.html
+          retention-days: 90
+
       - name: Upload prospects CSV
         if: always()
         uses: actions/upload-artifact@v4
@@ -64,8 +72,19 @@ jobs:
       - name: Show results summary
         if: always()
         run: |
-          echo "✅ Sourcing complete!"
-          echo "📊 Download prospects.csv from the Artifacts section above"
-          if [ -f prospects.csv ]; then
-            echo "📈 Prospects found: $(tail -n +2 prospects.csv | wc -l)"
+          echo "=========================="
+          echo "✅ SOURCING COMPLETE!"
+          echo "=========================="
+          if [ -f daily_report.html ]; then
+            echo "📧 Daily Report: Download 'daily-founder-report' artifact above"
           fi
+          if [ -f prospects.csv ]; then
+            PROSPECT_COUNT=$(tail -n +2 prospects.csv | wc -l)
+            echo "📊 Found $PROSPECT_COUNT Illinois founders"
+          fi
+          echo ""
+          echo "📥 DOWNLOAD YOUR REPORT:"
+          echo "   1. Scroll up to 'Artifacts' section"
+          echo "   2. Click 'daily-founder-report'"
+          echo "   3. Open the HTML file in your browser"
+          echo "=========================="

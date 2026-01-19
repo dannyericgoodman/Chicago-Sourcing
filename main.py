@@ -18,7 +18,7 @@ from src.scrapers.producthunt_scraper import ProductHuntScraper
 from src.enrichment.auto_enrich import AutoEnricher
 from src.scoring.claude_scorer import ClaudeScorer
 from src.storage.csv_db import CSVDatabase
-# from src.storage.sheets_db import GoogleSheetsDB  # Disabled - using CSV instead
+from src.output.email_report import EmailReporter
 from src.output.slack_notify import SlackNotifier
 
 # Create logs directory if it doesn't exist
@@ -68,6 +68,7 @@ class SourcingEngine:
         self.enricher = AutoEnricher()
         self.scorer = ClaudeScorer()
         self.db = CSVDatabase('prospects.csv')  # Simple CSV output
+        self.reporter = EmailReporter()
         self.slack = SlackNotifier()
 
         logger.info("✅ All components initialized")
@@ -188,8 +189,14 @@ class SourcingEngine:
             logger.info(f"🤖 Auto-scored: {stats['scored']}")
             logger.info(f"⭐ High priority: {stats['high_priority']}")
             logger.info("="*80)
-            logger.info(f"✅ Check your Google Sheet for results!")
-            logger.info(f"🔗 https://docs.google.com/spreadsheets/d/{os.getenv('GOOGLE_SHEET_ID')}")
+
+            # Generate HTML report
+            logger.info("\n📧 Generating daily report...")
+            all_prospects = self.db.get_all_prospects()
+            report_path = self.reporter.save_report(all_prospects, 'daily_report.html')
+            if report_path:
+                logger.info(f"✅ Daily report saved: {report_path}")
+
             logger.info("="*80 + "\n")
 
         except Exception as e:
