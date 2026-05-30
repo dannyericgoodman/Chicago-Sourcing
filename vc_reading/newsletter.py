@@ -22,7 +22,7 @@ from typing import Dict, List
 
 from anthropic import Anthropic
 
-from . import deliver, render, sources, summarize
+from . import curriculum, deliver, render, sources, summarize
 
 logging.basicConfig(
     level=logging.INFO,
@@ -80,8 +80,33 @@ def get_pool(force_refresh: bool) -> Dict[str, List[Dict]]:
     return pools
 
 
+def _pick_for_author(key: str, pool: List[Dict], sent_urls: set) -> Dict:
+    """Choose the next essay for one author.
+
+    1. Walk the curated curriculum in order and take the first entry not yet
+       sent (using the live archive's authoritative URL when matched).
+    2. Once the curriculum is exhausted, dip into the rest of the archive
+       (random, for variety) for breadth.
+    """
+    for entry in curriculum.CURRICULUM.get(key, []):
+        match = curriculum.match_in_pool(entry, pool)
+        url = match.get("url") or entry.get("url")
+        if url and url not in sent_urls:
+            chosen = match or {"title": entry["title"], "url": entry["url"]}
+            chosen = dict(chosen)
+            chosen["curated"] = True
+            return chosen
+
+    tail = [e for e in pool if e["url"] not in sent_urls]
+    if tail:
+        choice = dict(random.choice(tail))
+        choice["curated"] = False
+        return choice
+    return {}
+
+
 def select_today(pools: Dict[str, List[Dict]], state: Dict) -> List[Dict]:
-    """Pick one not-yet-sent essay per author; reset an author when exhausted."""
+    """Pick one essay per author, advancing the curriculum; recycle when done."""
     sent = state.setdefault("sent", {})
     selections = []
     for author in sources.AUTHORS:
@@ -90,12 +115,17 @@ def select_today(pools: Dict[str, List[Dict]], state: Dict) -> List[Dict]:
         if not pool:
             logger.error("No essays available for %s; skipping.", author["name"])
             continue
-        already = set(sent.get(key, []))
-        candidates = [e for e in pool if e["url"] not in already]
-        if not candidates:  # full cycle complete — start over
-            logger.info("%s archive exhausted — recycling.", author["name"])
-            already, candidates = set(), pool
-        choice = random.choice(candidates)
+        sent_urls = set(sent.get(key, []))
+        choice = _pick_for_author(key, pool, sent_urls)
+        if not choice:  # everything seen — start the journey over
+            logger.info("%s fully read — recycling from the top.", author["name"])
+            sent[key] = []
+            choice = _pick_for_author(key, pool, set())
+        if not choice:
+            logger.error("Still nothing for %s; skipping.", author["name"])
+            continue
+        stage = "curated" if choice.get("curated") else "archive"
+        logger.info("%s [%s]: %s", author["name"], stage, choice["title"])
         sent.setdefault(key, [])
         if choice["url"] not in sent[key]:
             sent[key].append(choice["url"])
