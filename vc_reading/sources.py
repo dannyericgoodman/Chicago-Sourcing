@@ -35,6 +35,8 @@ HEADERS = {
         "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Safari/537.36"
     ),
     "Accept": "text/html,application/json,application/xhtml+xml,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Cache-Control": "no-cache",
 }
 
 MAX_TEXT_CHARS = 16000  # plenty for high-quality takeaways; keeps token cost sane
