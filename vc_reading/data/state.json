@@ -1,3 +1,13 @@
 {
-  "sent": {}
+  "sent": {
+    "paul_graham": [
+      "https://paulgraham.com/orth.html"
+    ],
+    "bill_gurley": [
+      "https://abovethecrowd.com/2012/11/13/all-markets-are-not-created-equal-10-factors-to-consider-when-evaluating-digital-marketplaces/"
+    ],
+    "andrew_chen": [
+      "https://andrewchen.com/unclear-definitions-for-click-fraud/"
+    ]
+  }
 }
