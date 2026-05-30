@@ -1,0 +1,51 @@
+name: Daily VC Reading Newsletter
+
+on:
+  schedule:
+    # 12:00 UTC daily = ~7am Central. Adjust to taste (cron is in UTC).
+    - cron: '0 12 * * *'
+  workflow_dispatch:        # lets you trigger a send manually from the Actions tab
+
+permissions:
+  contents: write           # needed to commit the rotation state back to the repo
+
+jobs:
+  newsletter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Send newsletter
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          VC_MODEL: ${{ vars.VC_MODEL }}            # optional; defaults to claude-opus-4-8
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          NEWSLETTER_TO: ${{ secrets.NEWSLETTER_TO }}  # optional; defaults to GMAIL_ADDRESS
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: python -m vc_reading.newsletter
+
+      - name: Persist rotation state
+        run: |
+          git config user.name  "vc-reading-bot"
+          git config user.email "actions@github.com"
+          git add vc_reading/data/state.json vc_reading/data/pool_cache.json
+          if git diff --cached --quiet; then
+            echo "No state changes to commit."
+          else
+            git commit -m "chore: update VC reading rotation state [skip ci]"
+            git push
+          fi
