@@ -85,7 +85,7 @@ CURRICULUM: Dict[str, List[Dict]] = {
          "keys": ["law of shitty clickthroughs"]},
         {"title": "Growth Hacker is the new VP Marketing",
          "url": "https://andrewchen.com/how-to-be-a-growth-hacker-an-airbnbcraigslist-case-study/",
-         "keys": ["growth hacker is the new vp", "growth hacker"]},
+         "keys": ["growth hacker is the new vp"]},
         {"title": "The Next Feature Fallacy",
          "url": "https://andrewchen.com/the-next-feature-fallacy-the-fallacy-that-the-next-new-feature-will-suddenly-make-people-use-your-product/",
          "keys": ["next feature fallacy"]},
