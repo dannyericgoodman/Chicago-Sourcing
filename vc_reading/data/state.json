@@ -1,13 +1,16 @@
 {
   "sent": {
     "paul_graham": [
-      "https://paulgraham.com/orth.html"
+      "https://paulgraham.com/orth.html",
+      "https://paulgraham.com/growth.html"
     ],
     "bill_gurley": [
-      "https://abovethecrowd.com/2012/11/13/all-markets-are-not-created-equal-10-factors-to-consider-when-evaluating-digital-marketplaces/"
+      "https://abovethecrowd.com/2012/11/13/all-markets-are-not-created-equal-10-factors-to-consider-when-evaluating-digital-marketplaces/",
+      "https://abovethecrowd.com/2011/05/24/all-revenue-is-not-created-equal-the-keys-to-the-10x-revenue-club/"
     ],
     "andrew_chen": [
-      "https://andrewchen.com/unclear-definitions-for-click-fraud/"
+      "https://andrewchen.com/unclear-definitions-for-click-fraud/",
+      "https://andrewchen.com/the-law-of-shitty-clickthroughs/"
     ]
   }
 }
