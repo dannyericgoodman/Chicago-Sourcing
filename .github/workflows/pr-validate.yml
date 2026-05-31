@@ -1,0 +1,35 @@
+name: Validate VC Reading
+
+# Smoke-tests the newsletter code on every PR so breakage is caught before it
+# reaches main. Runs a --dry-run (no email, no secrets, no commits): it exercises
+# imports, the candidate-pool build, curriculum selection, summarization
+# fallbacks, and HTML/text rendering, and fails the check on any exception.
+
+on:
+  pull_request:
+    paths:
+      - 'vc_reading/**'
+      - '.github/workflows/**'
+      - 'requirements.txt'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Dry-run validation
+        run: python -m vc_reading.newsletter --dry-run

@@ -172,15 +172,26 @@ def main(argv=None) -> int:
                         help="skip email/Notion; write a local preview.html")
     parser.add_argument("--refresh", action="store_true",
                         help="force-rebuild the candidate pool from the web")
+    parser.add_argument("--force", action="store_true",
+                        help="send even if an issue already went out today")
     args = parser.parse_args(argv)
 
     if not args.dry_run:
         _preflight()
 
     date_str = datetime.now().strftime("%A, %B %-d, %Y")
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    state = _load_json(STATE_FILE, {"sent": {}})
+    # Same-day de-duplication: lets us run multiple backup cron times for
+    # reliability without ever sending twice. last_sent_date is only set after a
+    # successful email, so a failed/dropped run still gets retried by the backup.
+    if not args.dry_run and not args.force and state.get("last_sent_date") == today:
+        logger.info("An issue already went out today (%s) — nothing to do. "
+                    "Use --force to override.", today)
+        return 0
 
     pools = get_pool(force_refresh=args.refresh)
-    state = _load_json(STATE_FILE, {"sent": {}})
     selections = select_today(pools, state)
     if not selections:
         logger.error("Nothing selected — aborting.")
@@ -211,12 +222,14 @@ def main(argv=None) -> int:
     deliver.archive_to_notion(issue, date_str, iso_date=datetime.now().strftime("%Y-%m-%d"))
 
     if not email_ok:
-        # Do NOT advance the rotation, so the next run retries these same essays,
-        # and exit non-zero so the GitHub run goes red and notifies the user.
+        # Do NOT advance the rotation or mark today done, so the next run (incl.
+        # the backup cron) retries these same essays; exit non-zero so the
+        # GitHub run goes red and notifies the user.
         logger.error("Email delivery failed — not advancing rotation. "
                      "Fix the GMAIL_* secrets and re-run.")
         return 1
 
+    state["last_sent_date"] = today
     _save_json(STATE_FILE, state)
     logger.info("Done. Emailed %d essays.", len(issue))
     return 0
