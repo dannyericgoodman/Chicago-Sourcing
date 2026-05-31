@@ -150,6 +150,22 @@ def build_issue(selections: List[Dict], client: Anthropic) -> List[Dict]:
     return issue
 
 
+def _preflight() -> None:
+    """Log which credentials are present (never the values) so a missing secret
+    is obvious at the top of the run log."""
+    checks = {
+        "ANTHROPIC_API_KEY": "summaries",
+        "GMAIL_ADDRESS": "email sender",
+        "GMAIL_APP_PASSWORD": "email auth",
+        "NEWSLETTER_TO": "recipient (optional)",
+        "NOTION_API_KEY": "Notion archive (optional)",
+        "NOTION_DATABASE_ID": "Notion archive (optional)",
+    }
+    logger.info("Preflight — credential presence:")
+    for var, what in checks.items():
+        logger.info("  %-20s %s   (%s)", var, "SET" if os.getenv(var) else "MISSING", what)
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Daily VC reading newsletter")
     parser.add_argument("--dry-run", action="store_true",
@@ -157,6 +173,9 @@ def main(argv=None) -> int:
     parser.add_argument("--refresh", action="store_true",
                         help="force-rebuild the candidate pool from the web")
     args = parser.parse_args(argv)
+
+    if not args.dry_run:
+        _preflight()
 
     date_str = datetime.now().strftime("%A, %B %-d, %Y")
 
@@ -168,10 +187,9 @@ def main(argv=None) -> int:
         return 1
 
     client = None
-    if not args.dry_run or os.getenv("ANTHROPIC_API_KEY"):
-        if os.getenv("ANTHROPIC_API_KEY"):
-            client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-    if client is None:
+    if os.getenv("ANTHROPIC_API_KEY"):
+        client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+    else:
         logger.warning("ANTHROPIC_API_KEY not set — using fallback takeaways.")
 
     issue = build_issue(selections, client)
@@ -188,10 +206,19 @@ def main(argv=None) -> int:
         logger.info("Dry run complete. Preview written to %s", preview)
         return 0
 
-    deliver.send_email(subject, html_body, text_body)
+    # Email is the required channel. Notion is best-effort.
+    email_ok = deliver.send_email(subject, html_body, text_body)
     deliver.archive_to_notion(issue, date_str, iso_date=datetime.now().strftime("%Y-%m-%d"))
+
+    if not email_ok:
+        # Do NOT advance the rotation, so the next run retries these same essays,
+        # and exit non-zero so the GitHub run goes red and notifies the user.
+        logger.error("Email delivery failed — not advancing rotation. "
+                     "Fix the GMAIL_* secrets and re-run.")
+        return 1
+
     _save_json(STATE_FILE, state)
-    logger.info("Done. Sent %d essays.", len(issue))
+    logger.info("Done. Emailed %d essays.", len(issue))
     return 0
 
 

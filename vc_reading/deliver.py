@@ -23,20 +23,23 @@ NOTION_VERSION = "2022-06-28"
 # Email (Gmail SMTP)
 # --------------------------------------------------------------------------- #
 def send_email(subject: str, html_body: str, text_body: str) -> bool:
-    user = os.getenv("GMAIL_ADDRESS")
-    password = os.getenv("GMAIL_APP_PASSWORD")
+    user = (os.getenv("GMAIL_ADDRESS") or "").strip()
+    # Gmail displays app passwords with spaces (e.g. "abcd efgh ijkl mnop") but
+    # they must be sent without — strip them so a copy-paste can't break auth.
+    password = (os.getenv("GMAIL_APP_PASSWORD") or "").replace(" ", "")
     # Delivery target: explicit NEWSLETTER_TO wins, then the sending account,
     # and finally the owner's inbox as a safe default.
-    recipient = os.getenv("NEWSLETTER_TO") or user or "danny.eric.goodman@gmail.com"
+    recipient = (os.getenv("NEWSLETTER_TO") or user or "danny.eric.goodman@gmail.com").strip()
 
     if not user or not password:
-        logger.warning("Email skipped: GMAIL_ADDRESS / GMAIL_APP_PASSWORD not set.")
+        logger.error("Email NOT sent: GMAIL_ADDRESS / GMAIL_APP_PASSWORD not set.")
         return False
 
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"The VC Reading Room <{user}>"
     msg["To"] = recipient
+    msg["Reply-To"] = user
     msg.attach(MIMEText(text_body, "plain"))
     msg.attach(MIMEText(html_body, "html"))
 
@@ -46,8 +49,12 @@ def send_email(subject: str, html_body: str, text_body: str) -> bool:
             server.sendmail(user, [r.strip() for r in recipient.split(",")], msg.as_string())
         logger.info("Email sent to %s", recipient)
         return True
+    except smtplib.SMTPAuthenticationError as exc:
+        logger.error("Email auth FAILED (check GMAIL_ADDRESS + a valid 16-char "
+                     "App Password with 2FA enabled): %s", exc)
+        return False
     except Exception as exc:
-        logger.error("Email send failed: %s", exc)
+        logger.error("Email send FAILED: %s", exc)
         return False
 
 
