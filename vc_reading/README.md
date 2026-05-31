@@ -113,6 +113,20 @@ To let the GitHub Action write to it you need an **internal integration token**:
 
 ---
 
+## Troubleshooting — "I didn't get the email"
+Every run starts by logging a **credential presence table** and, if email fails,
+logs a clear ERROR and **exits non-zero** (the GitHub run turns red and emails
+you). To diagnose, open Actions → the run → **Send newsletter** step:
+
+- **`GMAIL_ADDRESS ... MISSING`** → the secret isn't set (or is named wrong).
+- **`Email auth FAILED`** → wrong App Password, or 2-Step Verification isn't on.
+  Regenerate a 16-char App Password at <https://myaccount.google.com/apppasswords>.
+  (Spaces are auto-stripped, so pasting `abcd efgh ...` is fine.)
+- **Run is green but no email** → check **Spam** and the **Promotions** tab;
+  add yourself to contacts so future issues land in the inbox.
+- A failed run does **not** advance the rotation, so once you fix the secret the
+  next run resends the same day's essays.
+
 ## Cost
 Three short Opus 4.8 summaries/day ≈ a few cents/day. Switch `VC_MODEL` to a
 Haiku model to make it nearly free.
