@@ -2,8 +2,10 @@ name: Daily VC Reading Newsletter
 
 on:
   schedule:
-    # 12:00 UTC daily = ~7am Central. Adjust to taste (cron is in UTC).
-    - cron: '0 12 * * *'
+    # 12:37 UTC daily (~7:37am Central). NOTE: GitHub heavily delays/drops cron
+    # jobs scheduled on the hour (:00) — 12:00 UTC is one of the worst slots — so
+    # we use an odd off-hour minute for far more reliable firing. Cron is in UTC.
+    - cron: '37 12 * * *'
   workflow_dispatch:        # lets you trigger a send manually from the Actions tab
 
 permissions:
