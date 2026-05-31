@@ -2,10 +2,12 @@ name: Daily VC Reading Newsletter
 
 on:
   schedule:
-    # 12:37 UTC daily (~7:37am Central). NOTE: GitHub heavily delays/drops cron
-    # jobs scheduled on the hour (:00) — 12:00 UTC is one of the worst slots — so
-    # we use an odd off-hour minute for far more reliable firing. Cron is in UTC.
-    - cron: '37 12 * * *'
+    # Cron is in UTC. GitHub heavily delays/drops jobs scheduled on the hour
+    # (:00), so we use odd off-hour minutes. The script de-duplicates per day
+    # (last_sent_date), so the BACKUP run only sends if the primary was dropped —
+    # it never double-sends.
+    - cron: '37 12 * * *'   # primary  ~7:37am Central
+    - cron: '7 14 * * *'    # backup   ~9:07am Central (fires only if primary missed)
   workflow_dispatch:        # lets you trigger a send manually from the Actions tab
 
 permissions:
@@ -38,7 +40,8 @@ jobs:
           NEWSLETTER_TO: ${{ secrets.NEWSLETTER_TO }}  # optional; defaults to GMAIL_ADDRESS
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-        run: python -m vc_reading.newsletter
+        # Manual runs force a send (bypass same-day de-dup); scheduled runs respect it.
+        run: python -m vc_reading.newsletter ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
 
       - name: Persist rotation state
         run: |
