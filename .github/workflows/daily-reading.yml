@@ -2,18 +2,27 @@ name: Daily VC Reading Newsletter
 
 on:
   schedule:
-    # Cron is in UTC. GitHub frequently DELAYS or silently DROPS scheduled runs,
-    # so we fire several times across the morning for redundancy. The script
-    # de-duplicates per day (last_sent_date), so whichever attempt lands first
-    # sends the issue and the rest no-op — you never get more than one email.
-    - cron: '13 12 * * *'   # ~7:13am Central
-    - cron: '37 12 * * *'   # ~7:37am Central
-    - cron: '11 13 * * *'   # ~8:11am Central
-    - cron: '41 13 * * *'   # ~8:41am Central
-  workflow_dispatch:        # lets you trigger a send manually from the Actions tab
+    # ~7am Central window. Cron is UTC. GitHub frequently DELAYS or DROPS
+    # scheduled runs, so we fire several times; the script de-duplicates per day
+    # (last_sent_date), so whichever lands first sends and the rest no-op — you
+    # never get more than one email.
+    - cron: '13 12 * * *'   # ~7:13am CT
+    - cron: '37 12 * * *'   # ~7:37am CT
+    - cron: '11 13 * * *'   # ~8:11am CT
+    - cron: '41 13 * * *'   # ~8:41am CT
+  push:
+    # A reliable, non-cron trigger: any change to the newsletter on main attempts
+    # a send (still de-duplicated to one email/day). Also lets a merge verify the
+    # pipeline immediately. Bot "mark sent" commits use GITHUB_TOKEN + [skip ci],
+    # so they never re-trigger this.
+    branches: [main]
+    paths:
+      - 'vc_reading/**'
+      - '.github/workflows/daily-reading.yml'
+  workflow_dispatch:        # manual "Run workflow" button (forces a send)
 
 permissions:
-  contents: write           # needed to commit the rotation state back to the repo
+  contents: write           # to commit last_sent_date back
 
 jobs:
   newsletter:
@@ -36,23 +45,26 @@ jobs:
       - name: Send newsletter
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          VC_MODEL: ${{ vars.VC_MODEL }}            # optional; defaults to claude-opus-4-8
-          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          VC_MODEL: ${{ vars.VC_MODEL }}                 # optional; defaults to claude-opus-4-8
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}  # recommended email backend
+          RESEND_FROM: ${{ vars.RESEND_FROM }}           # optional sender override
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}    # alternative backend
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          NEWSLETTER_TO: ${{ secrets.NEWSLETTER_TO }}  # optional; defaults to GMAIL_ADDRESS
-          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NEWSLETTER_TO: ${{ secrets.NEWSLETTER_TO }}    # optional; defaults to your inbox
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}        # optional archive
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-        # Manual runs force a send (bypass same-day de-dup); scheduled runs respect it.
+        # Manual runs force a send; scheduled runs respect same-day de-dup.
         run: python -m vc_reading.newsletter ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
 
-      - name: Persist rotation state
+      - name: Persist send marker
+        if: success()
         run: |
           git config user.name  "vc-reading-bot"
           git config user.email "actions@github.com"
-          git add vc_reading/data/state.json vc_reading/data/pool_cache.json
+          git add vc_reading/data/state.json
           if git diff --cached --quiet; then
-            echo "No state changes to commit."
+            echo "No state change."
           else
-            git commit -m "chore: update VC reading rotation state [skip ci]"
+            git commit -m "chore: mark newsletter sent [skip ci]"
             git push
           fi
