@@ -1,13 +1,15 @@
-2026-06-01 14:13:17,876 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-01 14:13:17,907 - INFO - Paul Graham: How to Start a Startup
-2026-06-01 14:13:17,908 - INFO - Bill Gurley: All Markets Are Not Created Equal
-2026-06-01 14:13:17,908 - INFO - Andrew Chen: Growth Hacker is the new VP Marketing
-2026-06-01 14:13:25,842 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
-2026-06-01 14:13:25,862 - INFO - Summarized 'How to Start a Startup' (full-text, claude-opus-4-8).
-2026-06-01 14:13:34,371 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
-2026-06-01 14:13:34,373 - INFO - Summarized 'All Markets Are Not Created Equal' (full-text, claude-opus-4-8).
-2026-06-01 14:13:42,082 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
-2026-06-01 14:13:42,083 - INFO - Summarized 'Growth Hacker is the new VP Marketing' (full-text, claude-opus-4-8).
-2026-06-01 14:13:42,290 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
-2026-06-01 14:13:42,291 - ERROR - Email FAILED — see the error above. Not marking today as sent; the next run will retry.
-=== exit_code=1 ===
+2026-06-01 14:15:58,817 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-01 14:15:58,850 - INFO - Paul Graham: How to Start a Startup
+2026-06-01 14:15:58,850 - INFO - Bill Gurley: All Markets Are Not Created Equal
+2026-06-01 14:15:58,850 - INFO - Andrew Chen: Growth Hacker is the new VP Marketing
+2026-06-01 14:16:08,786 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-01 14:16:08,810 - INFO - Summarized 'How to Start a Startup' (full-text, claude-opus-4-8).
+2026-06-01 14:16:19,311 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-01 14:16:19,312 - INFO - Summarized 'All Markets Are Not Created Equal' (full-text, claude-opus-4-8).
+2026-06-01 14:16:27,423 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-01 14:16:27,424 - INFO - Summarized 'Growth Hacker is the new VP Marketing' (full-text, claude-opus-4-8).
+2026-06-01 14:16:27,563 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-01 14:16:29,384 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-01 14:16:29,687 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-01 14:16:29,687 - INFO - Done — emailed 3 essays.
+=== exit_code=0 ===
