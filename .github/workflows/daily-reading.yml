@@ -2,12 +2,14 @@ name: Daily VC Reading Newsletter
 
 on:
   schedule:
-    # Cron is in UTC. GitHub heavily delays/drops jobs scheduled on the hour
-    # (:00), so we use odd off-hour minutes. The script de-duplicates per day
-    # (last_sent_date), so the BACKUP run only sends if the primary was dropped —
-    # it never double-sends.
-    - cron: '37 12 * * *'   # primary  ~7:37am Central
-    - cron: '7 14 * * *'    # backup   ~9:07am Central (fires only if primary missed)
+    # Cron is in UTC. GitHub frequently DELAYS or silently DROPS scheduled runs,
+    # so we fire several times across the morning for redundancy. The script
+    # de-duplicates per day (last_sent_date), so whichever attempt lands first
+    # sends the issue and the rest no-op — you never get more than one email.
+    - cron: '13 12 * * *'   # ~7:13am Central
+    - cron: '37 12 * * *'   # ~7:37am Central
+    - cron: '11 13 * * *'   # ~8:11am Central
+    - cron: '41 13 * * *'   # ~8:41am Central
   workflow_dispatch:        # lets you trigger a send manually from the Actions tab
 
 permissions:
