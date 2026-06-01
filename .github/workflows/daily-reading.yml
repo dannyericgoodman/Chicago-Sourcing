@@ -54,17 +54,24 @@ jobs:
           NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}        # optional archive
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
         # Manual runs force a send; scheduled runs respect same-day de-dup.
-        run: python -m vc_reading.newsletter ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
+        # Tee output to a tracked file so the run log (incl. any email error) is
+        # committed to the repo and inspectable. Preserve the real exit code.
+        run: |
+          set +e
+          python -m vc_reading.newsletter ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }} 2>&1 | tee vc_reading/data/last_run.log
+          code=${PIPESTATUS[0]}
+          echo "=== exit_code=$code ===" >> vc_reading/data/last_run.log
+          exit $code
 
-      - name: Persist send marker
-        if: success()
+      - name: Persist state + run log
+        if: always()
         run: |
           git config user.name  "vc-reading-bot"
           git config user.email "actions@github.com"
-          git add vc_reading/data/state.json
+          git add vc_reading/data/state.json vc_reading/data/last_run.log
           if git diff --cached --quiet; then
-            echo "No state change."
+            echo "Nothing to commit."
           else
-            git commit -m "chore: mark newsletter sent [skip ci]"
-            git push
+            git commit -m "chore: newsletter run log + state [skip ci]"
+            git push || true
           fi
