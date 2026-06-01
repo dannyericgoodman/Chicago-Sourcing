@@ -73,13 +73,26 @@ def _send_gmail(subject: str, html_body: str, text_body: str) -> bool:
 
 
 def send_newsletter(subject: str, html_body: str, text_body: str) -> bool:
-    """Send via Resend if configured, else Gmail. Returns True on success."""
+    """Try each configured backend until one accepts the message.
+
+    Resend is tried first (if a key is set), then Gmail SMTP. Whichever succeeds
+    wins; we never send twice.
+    """
+    tried = []
     if os.getenv("RESEND_API_KEY"):
-        return _send_resend(subject, html_body, text_body)
+        tried.append("Resend")
+        if _send_resend(subject, html_body, text_body):
+            return True
     if os.getenv("GMAIL_ADDRESS") and os.getenv("GMAIL_APP_PASSWORD"):
-        return _send_gmail(subject, html_body, text_body)
-    logger.error("Email NOT sent: set RESEND_API_KEY (recommended), or "
-                 "GMAIL_ADDRESS + GMAIL_APP_PASSWORD.")
+        tried.append("Gmail")
+        if _send_gmail(subject, html_body, text_body):
+            return True
+    if not tried:
+        logger.error("Email NOT sent: configure RESEND_API_KEY (recommended) or "
+                     "GMAIL_ADDRESS + GMAIL_APP_PASSWORD.")
+    else:
+        logger.error("Email NOT sent: all configured backends failed (%s).",
+                     ", ".join(tried))
     return False
 
 
