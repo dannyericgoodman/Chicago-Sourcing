@@ -1,141 +1,53 @@
 # 📚 The VC Reading Room
 
-A daily newsletter to help you study the canon of early-stage venture capital.
-Every morning it picks **one classic essay each** from **Paul Graham**, **Bill
-Gurley**, and **Andrew Chen**, has **Claude (Opus 4.8)** distill 3–5 key
-takeaways + an "investor angle" for each, and delivers it two ways:
+A daily email to help you become an elite venture investor. Every morning it
+picks **one curated essay each** from **Paul Graham**, **Bill Gurley**, and
+**Andrew Chen**, links to it, and includes **Claude-written key takeaways +
+"investor angle"** tailored to that goal.
 
-- **📧 Email** to your inbox (`danny.eric.goodman@gmail.com` by default), and
-- **🗄️ Notion** — one archive page per day in your **VC Daily Reading** database.
+Runs on a GitHub Actions cron — no server. Deliberately simple:
 
-It runs entirely on a **GitHub Actions cron** — no server, no laptop, nothing to
-babysit. It rotates through each author's full archive without repeating, and
-only recycles once you've seen everything.
+- **Selection** is deterministic by date from hand-curated, ordered lists
+  (`essays.py`) — foundations first, then sharper investor judgment. No scraping
+  needed to choose; it advances one step per author per day and cycles.
+- **Summaries**: `summarize.py` fetches the essay and has Claude distill it;
+  if a site blocks the fetch, Claude summarizes the known essay from memory
+  (with a guard against making things up).
+- **Delivery**: `deliver.py` — **Resend** (recommended) or **Gmail SMTP**.
+- **De-dup**: a one-line `last_sent_date` lets the workflow fire several times
+  each morning (for reliability) while sending **at most one** email/day.
 
----
+## Setup (one secret + done)
 
-## How it works
+In **GitHub → Settings → Secrets and variables → Actions**:
 
-```
-GitHub Actions (daily cron)
-        │
-        ├─ build candidate pool  ── Paul Graham   → scrapes paulgraham.com/articles.html
-        │  (cached weekly)          Bill Gurley    → abovethecrowd.com WordPress REST API
-        │                           Andrew Chen    → andrewchen.com  WordPress REST API
-        │
-        ├─ pick 1 unseen essay per author  (rotation tracked in data/state.json)
-        ├─ fetch full text  →  Claude Opus 4.8  →  takeaways + investor angle
-        ├─ render HTML + plain-text email
-        ├─ send via Gmail SMTP        (deliver.send_email)
-        ├─ archive to Notion          (deliver.archive_to_notion)
-        └─ commit updated rotation state back to the repo
-```
+| Secret | Required | Notes |
+|--------|----------|-------|
+| `ANTHROPIC_API_KEY` | for summaries | already used by this repo |
+| `RESEND_API_KEY` | **recommended email** | see below — most reliable |
+| `GMAIL_ADDRESS` + `GMAIL_APP_PASSWORD` | alt email | needs 2FA + a 16-char App Password |
+| `NEWSLETTER_TO` | optional | recipient; defaults to your inbox |
+| `NOTION_API_KEY` + `NOTION_DATABASE_ID` | optional | also archive each issue to Notion |
 
-Everything degrades gracefully: if a source site is unreachable, it falls back
-to a cached pool then to an embedded seed; if the model call fails, the essay
-still goes out with a "read it directly" note. A missing credential just skips
-that one channel.
+### Email via Resend (recommended — no App Password headaches)
+1. Sign up free at <https://resend.com> using **danny.eric.goodman@gmail.com**.
+2. **API Keys → Create API Key** → copy it (`re_...`).
+3. Add it as the `RESEND_API_KEY` secret.
 
-### Files
-| File | Purpose |
-|------|---------|
-| `sources.py` | Build the candidate pool & fetch full essay text |
-| `summarize.py` | Claude Opus 4.8 → takeaways JSON |
-| `render.py` | HTML + plain-text email rendering |
-| `deliver.py` | Gmail SMTP + Notion archive |
-| `newsletter.py` | Orchestrator + CLI (`python -m vc_reading.newsletter`) |
-| `data/pool_cache.json` | Cached pool of essays (rebuilt weekly) |
-| `data/state.json` | Which essays have already been sent (no-repeat rotation) |
-
----
-
-## One-time setup (~10 minutes)
-
-All configuration is via **GitHub repository secrets**
-(`Settings → Secrets and variables → Actions → New repository secret`).
-
-### 1. Anthropic (required for takeaways)
-| Secret | Value |
-|--------|-------|
-| `ANTHROPIC_API_KEY` | Your Anthropic API key (the repo's sourcing engine already uses this) |
-
-> Model defaults to `claude-opus-4-8`. To change it, add an Actions **variable**
-> (not secret) named `VC_MODEL`, e.g. `claude-haiku-4-5-20251001` to cut cost.
-
-### 2. Email — Gmail App Password (required for the email blast)
-Gmail blocks plain passwords, so create an **App Password**:
-1. Enable 2-Step Verification on your Google account.
-2. Go to <https://myaccount.google.com/apppasswords>, create one named "VC Reading".
-3. Add these secrets:
-
-| Secret | Value |
-|--------|-------|
-| `GMAIL_ADDRESS` | The Gmail account that *sends* (e.g. `danny.eric.goodman@gmail.com`) |
-| `GMAIL_APP_PASSWORD` | The 16-character app password (no spaces) |
-| `NEWSLETTER_TO` | *(optional)* recipient(s), comma-separated. Defaults to `GMAIL_ADDRESS`, then to `danny.eric.goodman@gmail.com` |
-
-### 3. Notion archive (required for the Notion copy)
-A database called **"VC Daily Reading"** has already been created in your
-workspace:
-
-- **Database ID:** `f1571e20921b4e5286c93a9ab45f3245`
-
-To let the GitHub Action write to it you need an **internal integration token**:
-1. Go to <https://www.notion.so/my-integrations> → **New integration** →
-   name it "VC Reading", workspace = yours → copy the **Internal Integration Secret** (`secret_…` / `ntn_…`).
-2. Open the **VC Daily Reading** database in Notion → top-right `•••` →
-   **Connections** → add your "VC Reading" integration (this grants it write access).
-3. Add these secrets:
-
-| Secret | Value |
-|--------|-------|
-| `NOTION_API_KEY` | The integration secret from step 1 |
-| `NOTION_DATABASE_ID` | `f1571e20921b4e5286c93a9ab45f3245` |
-
-> If you skip Notion, just don't set these two — the email still sends.
-
----
+That's it. With the default `onboarding@resend.dev` sender you can email your own
+signup address with **no domain setup**. (To send from a custom address, verify a
+domain in Resend and set a `RESEND_FROM` Actions *variable*.)
 
 ## Run it
+- **Automatic:** four attempts each morning (`~7:13–8:41am Central`); de-dup
+  ensures one email. Retime via the `cron:` lines (UTC) in
+  `.github/workflows/daily-reading.yml`.
+- **Manual / test:** Actions → *Daily VC Reading Newsletter* → **Run workflow**
+  (forces a send immediately).
+- **Local:** `python -m vc_reading.newsletter --dry-run` (writes `data/preview.html`).
 
-- **Automatic:** every day at **12:00 UTC (~7am Central)** via
-  `.github/workflows/daily-reading.yml`. Change the `cron:` line to retime it
-  (cron is in UTC).
-- **Manual / first test:** GitHub → **Actions** tab → *Daily VC Reading
-  Newsletter* → **Run workflow**.
-- **Locally:**
-  ```bash
-  pip install -r requirements.txt
-  python -m vc_reading.newsletter --dry-run   # writes data/preview.html, no send
-  python -m vc_reading.newsletter             # real send (needs the env vars above)
-  python -m vc_reading.newsletter --refresh   # force-rebuild the essay pool
-  ```
-
----
-
-## Troubleshooting — "I didn't get the email"
-Every run starts by logging a **credential presence table** and, if email fails,
-logs a clear ERROR and **exits non-zero** (the GitHub run turns red and emails
-you). To diagnose, open Actions → the run → **Send newsletter** step:
-
-- **`GMAIL_ADDRESS ... MISSING`** → the secret isn't set (or is named wrong).
-- **`Email auth FAILED`** → wrong App Password, or 2-Step Verification isn't on.
-  Regenerate a 16-char App Password at <https://myaccount.google.com/apppasswords>.
-  (Spaces are auto-stripped, so pasting `abcd efgh ...` is fine.)
-- **Run is green but no email** → check **Spam** and the **Promotions** tab;
-  add yourself to contacts so future issues land in the inbox.
-- A failed run does **not** advance the rotation, so once you fix the secret the
-  next run resends the same day's essays.
-
-## Cost
-Three short Opus 4.8 summaries/day ≈ a few cents/day. Switch `VC_MODEL` to a
-Haiku model to make it nearly free.
-
-## Notes
-- **Rotation** is stored in `data/state.json` and committed back by the Action
-  after each run, so you won't see repeats until an author's archive is
-  exhausted. To reset, set `{"sent": {}}`.
-- Paul Graham's site serves plain HTML; Gurley and Chen run WordPress, so the
-  pool is built from their `/wp-json/wp/v2/posts` API — robust and complete.
-- The pool refreshes at most weekly (`POOL_MAX_AGE_DAYS` in `newsletter.py`), so
-  new posts by these authors are automatically picked up.
+## Troubleshooting
+Every run logs a **Preflight** line showing which backends are set, and **exits
+red** if the email fails (so GitHub notifies you) — open the *Send newsletter*
+step to see the exact reason. A failed send does **not** mark the day done, so the
+next attempt retries. If a green run still yields no email, check Spam/Promotions.

@@ -1,8 +1,12 @@
-"""Delivery channels: Gmail SMTP email and a per-day Notion archive page.
+"""Email delivery + optional Notion archive.
 
-Both are optional and degrade gracefully — if the relevant environment
-variables are missing, the channel is skipped with a log message rather than
-failing the run.
+Two interchangeable email backends, chosen by which secret is set:
+  * Resend  (recommended) — one API key, sends over HTTPS, no App Password / 2FA.
+    With the default onboarding@resend.dev sender you can email your *own*
+    address with zero domain setup. Set RESEND_API_KEY.
+  * Gmail SMTP — set GMAIL_ADDRESS + a 16-char App Password.
+
+`send_newsletter` returns True only when the provider accepted the message.
 """
 
 import logging
@@ -16,25 +20,38 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-NOTION_VERSION = "2022-06-28"
+
+def _recipient() -> str:
+    return (os.getenv("NEWSLETTER_TO")
+            or os.getenv("GMAIL_ADDRESS")
+            or "danny.eric.goodman@gmail.com").strip()
 
 
-# --------------------------------------------------------------------------- #
-# Email (Gmail SMTP)
-# --------------------------------------------------------------------------- #
-def send_email(subject: str, html_body: str, text_body: str) -> bool:
+def _send_resend(subject: str, html_body: str, text_body: str) -> bool:
+    key = os.getenv("RESEND_API_KEY", "").strip()
+    sender = os.getenv("RESEND_FROM", "The VC Reading Room <onboarding@resend.dev>").strip()
+    to = [r.strip() for r in _recipient().split(",")]
+    try:
+        resp = requests.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"},
+            json={"from": sender, "to": to, "subject": subject,
+                  "html": html_body, "text": text_body},
+            timeout=30,
+        )
+        if resp.status_code in (200, 201):
+            logger.info("Email sent via Resend to %s", to)
+            return True
+        logger.error("Resend send FAILED: HTTP %s — %s", resp.status_code, resp.text[:400])
+    except Exception as exc:
+        logger.error("Resend send FAILED: %s", exc)
+    return False
+
+
+def _send_gmail(subject: str, html_body: str, text_body: str) -> bool:
     user = (os.getenv("GMAIL_ADDRESS") or "").strip()
-    # Gmail displays app passwords with spaces (e.g. "abcd efgh ijkl mnop") but
-    # they must be sent without — strip them so a copy-paste can't break auth.
-    password = (os.getenv("GMAIL_APP_PASSWORD") or "").replace(" ", "")
-    # Delivery target: explicit NEWSLETTER_TO wins, then the sending account,
-    # and finally the owner's inbox as a safe default.
-    recipient = (os.getenv("NEWSLETTER_TO") or user or "danny.eric.goodman@gmail.com").strip()
-
-    if not user or not password:
-        logger.error("Email NOT sent: GMAIL_ADDRESS / GMAIL_APP_PASSWORD not set.")
-        return False
-
+    password = (os.getenv("GMAIL_APP_PASSWORD") or "").replace(" ", "")  # strip the displayed spaces
+    recipient = _recipient()
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = f"The VC Reading Room <{user}>"
@@ -42,94 +59,75 @@ def send_email(subject: str, html_body: str, text_body: str) -> bool:
     msg["Reply-To"] = user
     msg.attach(MIMEText(text_body, "plain"))
     msg.attach(MIMEText(html_body, "html"))
-
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as server:
             server.login(user, password)
             server.sendmail(user, [r.strip() for r in recipient.split(",")], msg.as_string())
-        logger.info("Email sent to %s", recipient)
+        logger.info("Email sent via Gmail to %s", recipient)
         return True
     except smtplib.SMTPAuthenticationError as exc:
-        logger.error("Email auth FAILED (check GMAIL_ADDRESS + a valid 16-char "
-                     "App Password with 2FA enabled): %s", exc)
-        return False
+        logger.error("Gmail auth FAILED (need 2FA + a valid 16-char App Password): %s", exc)
     except Exception as exc:
-        logger.error("Email send FAILED: %s", exc)
-        return False
+        logger.error("Gmail send FAILED: %s", exc)
+    return False
+
+
+def send_newsletter(subject: str, html_body: str, text_body: str) -> bool:
+    """Send via Resend if configured, else Gmail. Returns True on success."""
+    if os.getenv("RESEND_API_KEY"):
+        return _send_resend(subject, html_body, text_body)
+    if os.getenv("GMAIL_ADDRESS") and os.getenv("GMAIL_APP_PASSWORD"):
+        return _send_gmail(subject, html_body, text_body)
+    logger.error("Email NOT sent: set RESEND_API_KEY (recommended), or "
+                 "GMAIL_ADDRESS + GMAIL_APP_PASSWORD.")
+    return False
 
 
 # --------------------------------------------------------------------------- #
-# Notion archive
+# Optional Notion archive (best-effort; skipped if secrets absent)
 # --------------------------------------------------------------------------- #
 def _rich(text: str) -> List[Dict]:
-    # Notion caps rich_text content at 2000 chars per object.
     return [{"type": "text", "text": {"content": text[:1900]}}]
 
 
 def _issue_blocks(issues: List[Dict]) -> List[Dict]:
     blocks: List[Dict] = []
     for it in issues:
-        blocks.append({
-            "object": "block", "type": "heading_2",
-            "heading_2": {"rich_text": [{
-                "type": "text",
-                "text": {"content": f"{it['author']}: {it['title']}",
-                         "link": {"url": it["url"]}},
-            }]},
-        })
-        blocks.append({
-            "object": "block", "type": "quote",
-            "quote": {"rich_text": _rich(it["one_liner"])},
-        })
+        blocks.append({"object": "block", "type": "heading_2", "heading_2": {
+            "rich_text": [{"type": "text", "text": {"content": f"{it['author']}: {it['title']}",
+                                                    "link": {"url": it["url"]}}}]}})
+        blocks.append({"object": "block", "type": "quote",
+                       "quote": {"rich_text": _rich(it["one_liner"])}})
         for t in it["takeaways"]:
-            blocks.append({
-                "object": "block", "type": "bulleted_list_item",
-                "bulleted_list_item": {"rich_text": _rich(t)},
-            })
+            blocks.append({"object": "block", "type": "bulleted_list_item",
+                           "bulleted_list_item": {"rich_text": _rich(t)}})
         if it.get("investor_angle"):
-            blocks.append({
-                "object": "block", "type": "callout",
-                "callout": {
-                    "icon": {"emoji": "💡"},
-                    "rich_text": _rich("Investor angle: " + it["investor_angle"]),
-                },
-            })
+            blocks.append({"object": "block", "type": "callout", "callout": {
+                "icon": {"emoji": "💡"}, "rich_text": _rich("Investor angle: " + it["investor_angle"])}})
         blocks.append({"object": "block", "type": "divider", "divider": {}})
     return blocks
 
 
-def archive_to_notion(issues: List[Dict], date_str: str,
-                      iso_date: Optional[str] = None) -> Optional[str]:
-    token = os.getenv("NOTION_API_KEY")
-    db_id = os.getenv("NOTION_DATABASE_ID")
+def archive_to_notion(issues: List[Dict], date_str: str, iso_date: Optional[str] = None) -> None:
+    token, db_id = os.getenv("NOTION_API_KEY"), os.getenv("NOTION_DATABASE_ID")
     if not token or not db_id:
-        logger.warning("Notion archive skipped: NOTION_API_KEY / NOTION_DATABASE_ID not set.")
-        return None
-
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Notion-Version": NOTION_VERSION,
-        "Content-Type": "application/json",
-    }
-    properties: Dict = {
+        return
+    props: Dict = {
         "Name": {"title": [{"text": {"content": f"VC Reading — {date_str}"}}]},
         "Authors": {"rich_text": _rich(", ".join(it["author"] for it in issues))},
     }
     if iso_date:
-        properties["Date"] = {"date": {"start": iso_date}}
-    payload = {
-        "parent": {"database_id": db_id},
-        "properties": properties,
-        "children": _issue_blocks(issues),
-    }
+        props["Date"] = {"date": {"start": iso_date}}
     try:
         resp = requests.post("https://api.notion.com/v1/pages",
-                             headers=headers, json=payload, timeout=30)
+                             headers={"Authorization": f"Bearer {token}",
+                                      "Notion-Version": "2022-06-28",
+                                      "Content-Type": "application/json"},
+                             json={"parent": {"database_id": db_id}, "properties": props,
+                                   "children": _issue_blocks(issues)}, timeout=30)
         if resp.status_code == 200:
-            url = resp.json().get("url")
-            logger.info("Archived to Notion: %s", url)
-            return url
-        logger.error("Notion archive failed: HTTP %s — %s", resp.status_code, resp.text[:300])
+            logger.info("Archived to Notion.")
+        else:
+            logger.warning("Notion archive failed: HTTP %s — %s", resp.status_code, resp.text[:200])
     except Exception as exc:
-        logger.error("Notion archive error: %s", exc)
-    return None
+        logger.warning("Notion archive error: %s", exc)
