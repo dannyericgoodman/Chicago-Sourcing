@@ -10,6 +10,15 @@ on:
     - cron: '37 12 * * *'   # ~7:37am CT
     - cron: '11 13 * * *'   # ~8:11am CT
     - cron: '41 13 * * *'   # ~8:41am CT
+  push:
+    # A reliable, non-cron trigger: any change to the newsletter on main attempts
+    # a send (still de-duplicated to one email/day). Also lets a merge verify the
+    # pipeline immediately. Bot "mark sent" commits use GITHUB_TOKEN + [skip ci],
+    # so they never re-trigger this.
+    branches: [main]
+    paths:
+      - 'vc_reading/**'
+      - '.github/workflows/daily-reading.yml'
   workflow_dispatch:        # manual "Run workflow" button (forces a send)
 
 permissions:
