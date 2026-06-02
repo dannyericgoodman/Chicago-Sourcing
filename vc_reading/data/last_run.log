@@ -1,3 +1,15 @@
-2026-06-01 19:13:22,640 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-01 19:13:22,640 - INFO - Already sent today (2026-06-01) — nothing to do.
+2026-06-02 16:53:27,175 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-02 16:53:27,207 - INFO - Paul Graham: How to Think for Yourself
+2026-06-02 16:53:27,207 - INFO - Bill Gurley: All Revenue is Not Created Equal: The Keys to the 10X Revenue Club
+2026-06-02 16:53:27,207 - INFO - Andrew Chen: The Next Feature Fallacy
+2026-06-02 16:53:34,970 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-02 16:53:34,989 - INFO - Summarized 'How to Think for Yourself' (full-text, claude-opus-4-8).
+2026-06-02 16:53:43,023 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-02 16:53:43,025 - INFO - Summarized 'All Revenue is Not Created Equal: The Keys to the 10X Revenue Club' (full-text, claude-opus-4-8).
+2026-06-02 16:53:51,014 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-02 16:53:51,015 - INFO - Summarized 'The Next Feature Fallacy' (full-text, claude-opus-4-8).
+2026-06-02 16:53:51,290 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-02 16:53:52,955 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-02 16:53:53,273 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-02 16:53:53,274 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
