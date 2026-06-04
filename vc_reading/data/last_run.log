@@ -1,3 +1,15 @@
-2026-06-03 18:12:12,104 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-03 18:12:12,104 - INFO - Already sent today (2026-06-03) — nothing to do.
+2026-06-04 15:38:15,921 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-04 15:38:15,954 - INFO - Paul Graham: Do Things that Don't Scale
+2026-06-04 15:38:15,954 - INFO - Bill Gurley: How to Miss By a Mile: An Alternative Look at Uber's Potential Market Size
+2026-06-04 15:38:15,954 - INFO - Andrew Chen: Minimize your Time to Product/Market Fit
+2026-06-04 15:38:25,274 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-04 15:38:25,298 - INFO - Summarized 'Do Things that Don't Scale' (full-text, claude-opus-4-8).
+2026-06-04 15:38:34,034 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-04 15:38:34,035 - INFO - Summarized 'How to Miss By a Mile: An Alternative Look at Uber's Potential Market Size' (full-text, claude-opus-4-8).
+2026-06-04 15:38:42,940 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-04 15:38:42,940 - INFO - Summarized 'Minimize your Time to Product/Market Fit' (full-text, claude-opus-4-8).
+2026-06-04 15:38:43,115 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-04 15:38:44,446 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-04 15:38:44,633 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-04 15:38:44,634 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
