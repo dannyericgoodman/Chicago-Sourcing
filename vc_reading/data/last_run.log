@@ -1,3 +1,19 @@
-2026-06-07 15:13:43,253 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-07 15:13:43,253 - INFO - Already sent today (2026-06-07) — nothing to do.
+2026-06-08 16:16:31,085 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-08 16:16:31,119 - INFO - Paul Graham: How to Convince Investors
+2026-06-08 16:16:31,119 - INFO - Bill Gurley: Why Facebook Clearly Belongs in the 10X Revenue Club
+2026-06-08 16:16:31,119 - INFO - Andrew Chen: Growth Hacker is the new VP Marketing
+2026-06-08 16:16:38,949 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-08 16:16:38,972 - INFO - Summarized 'How to Convince Investors' (full-text, claude-opus-4-8).
+2026-06-08 16:16:39,160 - WARNING - GET https://abovethecrowd.com/wp-json/wp/v2/posts -> HTTP 429
+2026-06-08 16:16:39,274 - WARNING - GET https://abovethecrowd.com/2012/02/01/why-facebook-clearly-belongs-in-the-10x-revenue-club/ -> HTTP 429
+2026-06-08 16:16:39,275 - WARNING - No fetched text for 'Why Facebook Clearly Belongs in the 10X Revenue Club' — summarizing from knowledge.
+2026-06-08 16:16:46,708 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-08 16:16:47,906 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-08 16:16:47,907 - ERROR - Summary failed for 'Why Facebook Clearly Belongs in the 10X Revenue Club': model returned empty (likely unknown essay)
+2026-06-08 16:16:55,847 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-08 16:16:55,848 - INFO - Summarized 'Growth Hacker is the new VP Marketing' (full-text, claude-opus-4-8).
+2026-06-08 16:16:55,959 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-08 16:16:57,203 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-08 16:16:57,714 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-08 16:16:57,716 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
