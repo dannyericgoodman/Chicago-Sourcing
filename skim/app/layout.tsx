@@ -5,6 +5,8 @@ export const metadata: Metadata = {
   title: "Skim",
   description: "Your newsletters and blogs, as stories. Read them in 24h or they're gone.",
   manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Skim" },
+  icons: { apple: "/apple-touch-icon.png", icon: "/icon-192.png" },
 };
 
 export const viewport: Viewport = {
