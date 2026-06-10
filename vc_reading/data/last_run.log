@@ -1,3 +1,15 @@
-2026-06-09 16:20:29,861 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-09 16:20:29,861 - INFO - Already sent today (2026-06-09) — nothing to do.
+2026-06-10 16:05:35,906 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-10 16:05:35,937 - INFO - Paul Graham: How to Make Wealth
+2026-06-10 16:05:35,937 - INFO - Bill Gurley: All Revenue is Not Created Equal: The Keys to the 10X Revenue Club
+2026-06-10 16:05:35,937 - INFO - Andrew Chen: New data shows losing 80% of mobile users is normal
+2026-06-10 16:05:44,766 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-10 16:05:44,788 - INFO - Summarized 'How to Make Wealth' (full-text, claude-opus-4-8).
+2026-06-10 16:05:52,278 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-10 16:05:52,279 - INFO - Summarized 'All Revenue is Not Created Equal: The Keys to the 10X Revenue Club' (full-text, claude-opus-4-8).
+2026-06-10 16:06:00,580 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-10 16:06:00,581 - INFO - Summarized 'New data shows losing 80% of mobile users is normal' (full-text, claude-opus-4-8).
+2026-06-10 16:06:00,700 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-10 16:06:01,639 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-10 16:06:02,048 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-10 16:06:02,050 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
