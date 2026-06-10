@@ -17,10 +17,16 @@ export async function GET() {
   return NextResponse.json({ items: data });
 }
 
-// Mark a story seen (so it visually settles / can fall away).
+// Update a story's ephemeral state: mark it seen, or save/unsave it to keep it
+// past the 24h sweep. Body: { id, seen?: true, save?: boolean }.
 export async function POST(req: NextRequest) {
-  const { id } = await req.json().catch(() => ({}));
+  const { id, seen, save } = await req.json().catch(() => ({}));
   if (!id) return NextResponse.json({ error: "id required" }, { status: 400 });
-  await admin().from("items").update({ seen_at: new Date().toISOString() }).eq("id", id);
+  const patch: Record<string, unknown> = {};
+  if (seen) patch.seen_at = new Date().toISOString();
+  if (typeof save === "boolean") patch.saved = save;
+  if (Object.keys(patch).length === 0) return NextResponse.json({ error: "nothing to update" }, { status: 400 });
+  const { error } = await admin().from("items").update(patch).eq("id", id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

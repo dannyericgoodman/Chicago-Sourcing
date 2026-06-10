@@ -1,5 +1,5 @@
 import { admin, Source } from "./supabase";
-import { parseFeed } from "./rss";
+import { parseFeed, scrapeHomepage } from "./rss";
 import { summarize } from "./summarize";
 
 const WINDOW_HOURS = 24;
@@ -17,7 +17,8 @@ export async function runIngest(): Promise<{ found: number; summarized: number; 
 
   for (const src of (sources || []) as Source[]) {
     try {
-      const feed = await parseFeed(src.feed_url);
+      // "rss" parses a feed; "scrape" diffs a homepage with no feed.
+      const feed = src.kind === "scrape" ? await scrapeHomepage(src.feed_url) : await parseFeed(src.feed_url);
       const cutoff = Date.now() - WINDOW_HOURS * 3600_000;
       const fresh = feed.items.filter((i) => {
         const t = i.publishedAt ? Date.parse(i.publishedAt) : Date.now();
@@ -32,7 +33,9 @@ export async function runIngest(): Promise<{ found: number; summarized: number; 
             title: it.title,
             url: it.url,
             author: it.author,
-            published_at: it.publishedAt,
+            // Dateless items (scraped links) enter the window now and expire 24h
+            // after we first saw them — duplicates are ignored so the clock holds.
+            published_at: it.publishedAt ?? new Date().toISOString(),
           },
           { onConflict: "source_id,guid", ignoreDuplicates: true },
         );

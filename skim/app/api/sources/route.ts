@@ -21,11 +21,19 @@ export async function POST(req: NextRequest) {
   if (!url) return NextResponse.json({ error: "url required" }, { status: 400 });
 
   const found = await discoverFeed(url);
-  if (!found) return NextResponse.json({ error: "Couldn't find an RSS feed at that URL." }, { status: 422 });
+  if (!found) {
+    return NextResponse.json(
+      { error: "Couldn't find a feed or readable post links at that URL." },
+      { status: 422 },
+    );
+  }
 
   const { data, error } = await admin()
     .from("sources")
-    .upsert({ title: found.title, feed_url: found.feedUrl, site_url: found.siteUrl }, { onConflict: "feed_url" })
+    .upsert(
+      { title: found.title, feed_url: found.pollUrl, site_url: found.siteUrl, kind: found.kind },
+      { onConflict: "feed_url" },
+    )
     .select()
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

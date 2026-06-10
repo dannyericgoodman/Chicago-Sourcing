@@ -8,36 +8,56 @@ stories**: each new post becomes a cover (title + one-liner) and an insight fram
 (Claude-written takeaways + the one thing worth remembering), with a persistent
 **"Read the full post ↗"** button. Posts live for **24 hours**, then fall away.
 
-- **RSS-first ingestion** — works with Substack, beehiiv, Ghost, Medium, and most
-  blogs out of the box. Paste a URL on `/manage`; Skim auto-discovers the feed.
+- **Tiered ingestion** — paste any content-home URL on `/manage`; Skim resolves it
+  via (1) platform rules (Substack/Ghost/Medium/YouTube/Reddit), (2) RSS
+  autodiscovery, (3) a **homepage-scrape fallback** when no feed exists at all.
 - **Summaries by Claude** — same prompt/shape as the `vc_reading` email engine,
   generalized to any post.
-- **One deploy** — Next.js on Vercel; Vercel Cron ingests every 30 min; Supabase
-  stores sources + items.
+- **Daily 9am email digest** — the "don't miss anything" safety net that lets the
+  in-app feed stay ephemeral. Open it once a day and you're caught up.
+- **Save to keep** — tap ☆ on any story to rescue it from the 24h sweep into
+  `/saved`.
+- **One deploy** — Next.js on Vercel; Supabase stores sources + items.
+
+### Ephemeral, but nothing missed
+
+The *stories* feed is deliberately ephemeral (last 24h). Two things keep that from
+ever losing something you wanted: the **9am digest** guarantees you see the day's
+list, and **Save** pulls anything worth keeping into a permanent list.
 
 ## Architecture
 
 ```
-Vercel Cron ─▶ GET /api/ingest ─▶ lib/ingest
-                                    ├─ lib/rss.parseFeed     (pull new posts < 24h old)
-                                    ├─ store in Supabase `items`
-                                    └─ lib/summarize (Claude) ─▶ takeaways + insight
-Browser ─▶ / (server-rendered) ─▶ components/Stories  (swipe, progress bars, 24h window)
-        ─▶ /manage ─▶ /api/sources (add by URL, remove, mute)
+Cron 8:30 ─▶ GET /api/ingest ─▶ lib/ingest
+                                  ├─ lib/rss  parseFeed | scrapeHomepage (new posts < 24h)
+                                  ├─ store in Supabase `items`
+                                  └─ lib/summarize (Claude) ─▶ takeaways + insight
+Cron 9:00 ─▶ GET /api/digest ─▶ lib/digest ─▶ Resend email "your stories are ready"
+Browser ─▶ / (SSR) ─▶ components/Stories  (swipe, progress bars, 24h window, ☆ save)
+        ─▶ /manage ─▶ /api/sources  (add by URL → discoverFeed, remove, mute)
+        ─▶ /saved  ─▶ rescued stories (no expiry)
 ```
 
 Files: `lib/` engine · `app/api/` routes · `app/` + `components/Stories.tsx` UI ·
-`supabase/schema.sql` data model.
+`supabase/schema.sql` + `supabase/migrations/` data model.
+
+> **Cron frequency:** Vercel's Hobby tier runs cron **once daily per job**, which
+> fits the daily-ritual model (ingest 8:30am, digest 9:00am CT / 13:30 + 14:00
+> UTC). Want near-real-time ingest? Hit `/api/ingest` from an external pinger
+> (GitHub Actions / cron-job.org) with the `x-skim-token` header, or use Vercel Pro.
 
 ## Deploy (≈15 min)
 
-1. **Supabase** → new project → SQL editor → run `supabase/schema.sql`
-   (optionally `scripts/seed-sources.sql`). Copy the project URL + **service-role** key.
-2. **Anthropic** → an API key (`ANTHROPIC_API_KEY`).
+1. **Supabase** → new project → SQL editor → run `supabase/schema.sql`, then
+   `supabase/migrations/0002_ingestion_and_saves.sql` (optionally
+   `scripts/seed-sources.sql`). Copy the project URL + **service-role** key.
+2. **Anthropic** → an API key (`ANTHROPIC_API_KEY`). **Resend** → an API key for the
+   daily digest (`RESEND_API_KEY`).
 3. **Vercel** → "New Project" → import this repo, set **Root Directory = `skim`**.
    Add env vars from `.env.example`:
    - `ANTHROPIC_API_KEY`, `SKIM_MODEL` (optional)
    - `NEXT_PUBLIC_SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+   - `RESEND_API_KEY`, `RESEND_FROM` (optional), `DIGEST_TO`, `APP_URL`
    - `CRON_SECRET`, `APP_TOKEN`, `NEXT_PUBLIC_APP_TOKEN`
 4. Deploy. `vercel.json` registers the every-30-min cron on `/api/ingest`
    (Vercel sends `Authorization: Bearer $CRON_SECRET` automatically).
@@ -57,8 +77,9 @@ npm run dev                  # http://localhost:3000
 ## Roadmap
 
 - **P3 — email-only newsletters:** Cloudflare Email Routing → webhook → `items`,
-  for senders without RSS.
-- **P3 — morning push:** Web Push "your stories are ready" at 8am.
+  for senders without RSS or a scrapeable homepage.
+- **Web Push upgrade:** the 9am email is the reliable default; add Web Push for
+  installed-PWA users who want a phone notification too.
 - **Multi-user:** swap the shared `APP_TOKEN` for Supabase Auth + RLS policies.
 
 ## Notes / security

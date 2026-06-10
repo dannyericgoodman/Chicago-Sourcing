@@ -14,8 +14,9 @@ export function admin() {
 export type Source = {
   id: string;
   title: string;
-  feed_url: string;
+  feed_url: string; // the URL we poll (feed for rss, page for scrape)
   site_url: string | null;
+  kind: "rss" | "scrape";
   muted: boolean;
   added_at: string;
   last_checked_at: string | null;
@@ -34,5 +35,6 @@ export type Item = {
   key_insight: string | null;
   summarized: boolean;
   seen_at: string | null;
+  saved: boolean;
   created_at: string;
 };

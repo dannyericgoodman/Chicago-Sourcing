@@ -33,7 +33,20 @@ export default function Stories({ items }: { items: Item[] }) {
   );
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [saved, setSaved] = useState<Record<string, boolean>>({});
   const frame = frames[i];
+
+  const toggleSave = useCallback((id: string) => {
+    setSaved((s) => {
+      const next = !s[id];
+      fetch("/api/items", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id, save: next }),
+      }).catch(() => {});
+      return { ...s, [id]: next };
+    });
+  }, []);
 
   const next = useCallback(() => setI((v) => Math.min(v + 1, frames.length - 1)), [frames.length]);
   const prev = useCallback(() => setI((v) => Math.max(v - 1, 0)), []);
@@ -83,7 +96,17 @@ export default function Stories({ items }: { items: Item[] }) {
 
       <div className="topbar">
         <span>{source}</span>
-        <span>{expiresIn(it.published_at)} · <a href="/manage">manage</a></span>
+        <span style={{ display: "flex", gap: 14, alignItems: "center" }}>
+          <span>{expiresIn(it.published_at)}</span>
+          <button
+            onClick={() => toggleSave(it.id)}
+            aria-label={saved[it.id] ? "Saved" : "Save"}
+            style={{ background: "none", border: "none", color: saved[it.id] ? "#ffd24a" : "var(--muted)", fontSize: 20, cursor: "pointer", padding: 0, lineHeight: 1 }}
+          >
+            {saved[it.id] ? "★" : "☆"}
+          </button>
+          <a href="/saved">saved</a>
+        </span>
       </div>
 
       <div
