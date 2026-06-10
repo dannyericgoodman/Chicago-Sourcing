@@ -12,7 +12,25 @@ export default function Manage() {
   const [sources, setSources] = useState<Source[]>([]);
   const [url, setUrl] = useState("");
   const [busy, setBusy] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [note, setNote] = useState("");
   const [err, setErr] = useState("");
+
+  // Pull new posts + summarize right now, instead of waiting for the 8:30am cron.
+  const refresh = async () => {
+    setRefreshing(true); setErr(""); setNote("Checking your sources…");
+    try {
+      const r = await fetch("/api/ingest", { headers: { "x-skim-token": TOKEN } });
+      const j = await r.json();
+      if (!r.ok) throw new Error(j.error || "Refresh failed");
+      setNote(`Done — ${j.found} new, ${j.summarized} summarized. Open Stories →`);
+    } catch (e) {
+      setErr((e as Error).message);
+      setNote("");
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   const load = async () => {
     const r = await fetch("/api/sources");
@@ -66,6 +84,7 @@ export default function Manage() {
       <p className="sub">Paste a Substack, blog, or newsletter URL — we'll find its feed.</p>
 
       {err && <p className="err">{err}</p>}
+      {note && <p className="sub" style={{ color: "var(--accent)" }}>{note}</p>}
 
       <div className="addrow">
         <input
@@ -78,6 +97,16 @@ export default function Manage() {
         />
         <button className="btn" onClick={add} disabled={busy}>{busy ? "…" : "Add"}</button>
       </div>
+
+      {sources.length > 0 && (
+        <button
+          onClick={refresh}
+          disabled={refreshing}
+          style={{ width: "100%", marginBottom: 22, background: "transparent", border: "1px solid #2a3344", color: "var(--ink)", borderRadius: 10, padding: "12px", fontSize: 15, fontWeight: 600, cursor: "pointer" }}
+        >
+          {refreshing ? "Refreshing…" : "↻ Refresh now"}
+        </button>
+      )}
 
       {sources.map((s) => (
         <div className="src" key={s.id}>
