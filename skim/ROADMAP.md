@@ -1,4 +1,4 @@
-# Skim — product roadmap
+# SkimIt — product roadmap
 
 **The spine:** *Follow great readers, not just newsletters — and let what you read
 compound into a second brain.* The daily digest is the surface; the magic is

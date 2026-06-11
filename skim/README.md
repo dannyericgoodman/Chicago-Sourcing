@@ -1,4 +1,4 @@
-# 📲 Skim — newsletters & blogs, in one scroll
+# 📲 SkimIt — newsletters & blogs, in one scroll
 
 > Inspired by "newsletters should exist like an Instagram story" (Will McKelvey) —
 > but built around the real job: **see the key takeaways from many newsletters in

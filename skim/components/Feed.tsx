@@ -87,7 +87,7 @@ export default function Feed({ items }: { items: Item[] }) {
   return (
     <>
       <header className="f-top">
-        <span className="f-brand">Skim</span>
+        <span className="f-brand">SkimIt</span>
         <div className="f-actions">
           <button onClick={refresh} disabled={refreshing}>{refreshing ? "Refreshing…" : "↻ Refresh"}</button>
           <a href="/manage">Manage</a>

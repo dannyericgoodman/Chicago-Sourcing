@@ -3,9 +3,9 @@ import type { MetadataRoute } from "next";
 // Makes Skim installable to the home screen so it opens fullscreen, like a real app.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Skim",
-    short_name: "Skim",
-    description: "Your newsletters and blogs, as stories.",
+    name: "SkimIt",
+    short_name: "SkimIt",
+    description: "The newsletters and blogs you follow, in one scroll.",
     start_url: "/",
     display: "standalone",
     background_color: "#faf9f7",

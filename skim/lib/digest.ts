@@ -36,11 +36,11 @@ function renderHtml(items: any[]): string {
   return `<!DOCTYPE html><html><body style="margin:0;background:#eef1f6;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;">
     <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:28px 14px;">
       <table width="100%" style="max-width:560px;background:#fff;border-radius:14px;padding:26px;">
-        <tr><td style="font-size:22px;font-weight:800;color:#0f172a;padding-bottom:4px;">Your stories are ready ☕️</td></tr>
-        <tr><td style="color:#52617a;font-size:14px;padding-bottom:22px;">${items.length} new — they're gone by tomorrow, so skim them now.</td></tr>
+        <tr><td style="font-size:22px;font-weight:800;color:#0f172a;padding-bottom:4px;">Your reading is ready ☕️</td></tr>
+        <tr><td style="color:#52617a;font-size:14px;padding-bottom:22px;">${items.length} new ${items.length === 1 ? "post" : "posts"} from the newsletters you follow, distilled.</td></tr>
         ${rows}
         <tr><td style="padding-top:8px;">
-          <a href="${esc(APP_URL)}" style="display:inline-block;background:#4a6cf7;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;font-size:15px;">Open Skim →</a>
+          <a href="${esc(APP_URL)}" style="display:inline-block;background:#4a6cf7;color:#fff;text-decoration:none;padding:12px 22px;border-radius:8px;font-weight:700;font-size:15px;">Open SkimIt →</a>
         </td></tr>
       </table>
     </td></tr></table></body></html>`;
@@ -53,7 +53,7 @@ export async function sendDigest(): Promise<{ sent: boolean; count: number; reas
   const key = process.env.RESEND_API_KEY?.trim();
   if (!key) return { sent: false, count: items.length, reason: "RESEND_API_KEY not set" };
 
-  const from = process.env.RESEND_FROM || "Skim <onboarding@resend.dev>";
+  const from = process.env.RESEND_FROM || "SkimIt <onboarding@resend.dev>";
   const to = (process.env.DIGEST_TO || process.env.NEWSLETTER_TO || "danny.eric.goodman@gmail.com")
     .split(",")
     .map((s) => s.trim());
@@ -64,7 +64,7 @@ export async function sendDigest(): Promise<{ sent: boolean; count: number; reas
     body: JSON.stringify({
       from,
       to,
-      subject: `☕️ ${items.length} stories waiting — skim before they're gone`,
+      subject: `☕️ ${items.length} new takeaways from your newsletters`,
       html: renderHtml(items),
     }),
   });

@@ -2,10 +2,10 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Skim",
-  description: "Your newsletters and blogs, as stories. Read them in 24h or they're gone.",
+  title: "SkimIt",
+  description: "The newsletters and blogs you follow, distilled into one clean scroll of takeaways.",
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Skim" },
+  appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "SkimIt" },
   icons: { apple: "/apple-touch-icon.png", icon: "/icon-192.png" },
 };
 
