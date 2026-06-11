@@ -1,3 +1,24 @@
-2026-06-10 16:49:04,288 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-10 16:49:04,288 - INFO - Already sent today (2026-06-10) — nothing to do.
+2026-06-11 16:19:09,545 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-11 16:19:09,570 - INFO - Paul Graham: Relentlessly Resourceful
+2026-06-11 16:19:09,570 - INFO - Bill Gurley: The Dangerous Seduction of the Lifetime Value (LTV) Formula
+2026-06-11 16:19:09,570 - INFO - Andrew Chen: Minimize your Time to Product/Market Fit
+2026-06-11 16:19:10,007 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2026-06-11 16:19:10,007 - WARNING - Model claude-opus-4-8 failed for 'Relentlessly Resourceful': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxH4kCDbfzQS8Mx8Qe'}
+2026-06-11 16:19:10,114 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2026-06-11 16:19:10,114 - WARNING - Model claude-sonnet-4-20250514 failed for 'Relentlessly Resourceful': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxHjBE6dj5Wp6Lh49A'}
+2026-06-11 16:19:10,114 - ERROR - Summary failed for 'Relentlessly Resourceful': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxHjBE6dj5Wp6Lh49A'}
+2026-06-11 16:19:10,522 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2026-06-11 16:19:10,522 - WARNING - Model claude-opus-4-8 failed for 'The Dangerous Seduction of the Lifetime Value (LTV) Formula': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxJs91Q2vg6SjgpZKo'}
+2026-06-11 16:19:10,632 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2026-06-11 16:19:10,632 - WARNING - Model claude-sonnet-4-20250514 failed for 'The Dangerous Seduction of the Lifetime Value (LTV) Formula': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxKwdfCSZ9sbFFqYYn'}
+2026-06-11 16:19:10,633 - ERROR - Summary failed for 'The Dangerous Seduction of the Lifetime Value (LTV) Formula': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxKwdfCSZ9sbFFqYYn'}
+2026-06-11 16:19:10,941 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2026-06-11 16:19:10,942 - WARNING - Model claude-opus-4-8 failed for 'Minimize your Time to Product/Market Fit': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxMGzueHxoxxp1tTAe'}
+2026-06-11 16:19:11,055 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 400 Bad Request"
+2026-06-11 16:19:11,055 - WARNING - Model claude-sonnet-4-20250514 failed for 'Minimize your Time to Product/Market Fit': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxMjXtMPMvZMLiEESs'}
+2026-06-11 16:19:11,055 - ERROR - Summary failed for 'Minimize your Time to Product/Market Fit': Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'Your credit balance is too low to access the Anthropic API. Please go to Plans & Billing to upgrade or purchase credits.'}, 'request_id': 'req_011CbwmxMjXtMPMvZMLiEESs'}
+2026-06-11 16:19:11,530 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-11 16:19:13,005 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-11 16:19:14,993 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-11 16:19:14,994 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
