@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Your newsletters and blogs, as stories.",
     start_url: "/",
     display: "standalone",
-    background_color: "#0b0d12",
-    theme_color: "#0b0d12",
+    background_color: "#faf9f7",
+    theme_color: "#faf9f7",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icon-512.png", sizes: "512x512", type: "image/png" },

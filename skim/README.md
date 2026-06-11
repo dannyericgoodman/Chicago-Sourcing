@@ -1,44 +1,40 @@
-# 📲 Skim — newsletters & blogs, as stories
+# 📲 Skim — newsletters & blogs, in one scroll
 
-> "Newsletters should exist in your inbox like an Instagram story. Open & read
-> within 24h → amazing. If you don't, it's gone." — Will McKelvey
+> Inspired by "newsletters should exist like an Instagram story" (Will McKelvey) —
+> but built around the real job: **see the key takeaways from many newsletters in
+> one scroll, and jump to the full post when something grabs you.**
 
-Skim turns the blogs and newsletters you follow into **swipeable, ephemeral
-stories**: each new post becomes a cover (title + one-liner) and an insight frame
-(Claude-written takeaways + the one thing worth remembering), with a persistent
-**"Read the full post ↗"** button. Posts live for **24 hours**, then fall away.
+Skim turns every blog and newsletter you follow into a single, clean, editorial
+**scroll of insight cards** — newest first, grouped by day. Each card shows the
+source, the Claude-written **one-liner + takeaways + the insight**, and a
+**"Read the full post →"** link. Nothing to swipe; just skim.
 
 - **Tiered ingestion** — paste any content-home URL on `/manage`; Skim resolves it
   via (1) platform rules (Substack/Ghost/Medium/YouTube/Reddit), (2) RSS
   autodiscovery, (3) a **homepage-scrape fallback** when no feed exists at all.
 - **Summaries by Claude** — same prompt/shape as the `vc_reading` email engine,
-  generalized to any post.
-- **Daily 9am email digest** — the "don't miss anything" safety net that lets the
-  in-app feed stay ephemeral. Open it once a day and you're caught up.
-- **Save to keep** — tap ☆ on any story to rescue it from the 24h sweep into
-  `/saved`.
+  generalized to any post (one-liner + 3 takeaways + the insight).
+- **One scroll** — a rolling 7-day feed, day dividers, per-source filter chips, and
+  read cards that dim so you can triage the many at a glance.
+- **Daily 9am email digest** — an optional nudge so you never forget to skim.
 - **One deploy** — Next.js on Vercel; Supabase stores sources + items.
 
-### Ephemeral, but nothing missed
-
-The *stories* feed is deliberately ephemeral (last 24h). Two things keep that from
-ever losing something you wanted: the **9am digest** guarantees you see the day's
-list, and **Save** pulls anything worth keeping into a permanent list.
+> Design preview: open `preview.html` in a browser to see the look with sample data.
 
 ## Architecture
 
 ```
 Cron 8:30 ─▶ GET /api/ingest ─▶ lib/ingest
-                                  ├─ lib/rss  parseFeed | scrapeHomepage (new posts < 24h)
+                                  ├─ lib/rss  parseFeed | scrapeHomepage (posts < 7d)
                                   ├─ store in Supabase `items`
-                                  └─ lib/summarize (Claude) ─▶ takeaways + insight
+                                  └─ lib/summarize (Claude) ─▶ one-liner + takeaways + insight
 Cron 9:00 ─▶ GET /api/digest ─▶ lib/digest ─▶ Resend email "your stories are ready"
-Browser ─▶ / (SSR) ─▶ components/Stories  (swipe, progress bars, 24h window, ☆ save)
-        ─▶ /manage ─▶ /api/sources  (add by URL → discoverFeed, remove, mute)
-        ─▶ /saved  ─▶ rescued stories (no expiry)
+Browser ─▶ / (SSR) ─▶ components/Feed  (one scroll, day dividers, source filter, read-dimming)
+        ─▶ /manage ─▶ /api/sources  (add by URL → discoverFeed, remove, mute, ↻ refresh)
+        ─▶ /setup  ─▶ plain-English "is it wired up?" checks
 ```
 
-Files: `lib/` engine · `app/api/` routes · `app/` + `components/Stories.tsx` UI ·
+Files: `lib/` engine · `app/api/` routes · `app/` + `components/Feed.tsx` UI ·
 `supabase/schema.sql` + `supabase/migrations/` data model.
 
 > **Cron frequency:** Vercel's Hobby tier runs cron **once daily per job**, which
@@ -48,9 +44,9 @@ Files: `lib/` engine · `app/api/` routes · `app/` + `components/Stories.tsx` U
 
 ## Deploy (≈15 min)
 
-1. **Supabase** → new project → SQL editor → run `supabase/schema.sql`, then
-   `supabase/migrations/0002_ingestion_and_saves.sql` (optionally
-   `scripts/seed-sources.sql`). Copy the project URL + **service-role** key.
+1. **Supabase** → new project → SQL editor → paste & run `supabase/setup.sql`
+   (one block: tables + indexes + a few starter sources). Copy the project URL +
+   **service-role** key.
 2. **Anthropic** → an API key (`ANTHROPIC_API_KEY`). **Resend** → an API key for the
    daily digest (`RESEND_API_KEY`).
 3. **Vercel** → "New Project" → import this repo, set **Root Directory = `skim`**.

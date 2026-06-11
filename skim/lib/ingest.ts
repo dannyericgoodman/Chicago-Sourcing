@@ -2,7 +2,10 @@ import { admin, Source } from "./supabase";
 import { parseFeed, scrapeHomepage } from "./rss";
 import { summarize } from "./summarize";
 
-const WINDOW_HOURS = 24;
+// How far back a post can be and still get picked up / summarized. Matches the
+// feed's rolling window so the "one scroll" stays populated without re-summarizing
+// the whole archive.
+const WINDOW_HOURS = 24 * 7;
 
 // One ingest pass: pull every active feed, store genuinely-new posts, then have
 // Claude summarize the unsummarized ones inside the 24h story window.

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Skim — design preview</title>
+<style>
+  :root{
+    --bg:#faf9f7;--card:#fff;--ink:#1a1c20;--soft:#5b6470;--faint:#98a0ad;
+    --line:#ece9e3;--accent:#2f6df6;--accent-wash:#eef3ff;
+    --serif:"Iowan Old Style","Charter",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;}
+  .f-top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;background:rgba(250,249,247,.86);backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line);}
+  .f-brand{font-size:19px;font-weight:800;letter-spacing:-.03em;}
+  .f-actions{display:flex;gap:16px;align-items:center;}
+  .f-actions a,.f-actions button{font-family:var(--sans);font-size:14px;color:var(--soft);text-decoration:none;background:none;border:none;padding:0;cursor:pointer;}
+  .f-chips{display:flex;gap:8px;overflow-x:auto;padding:12px 18px 4px;max-width:660px;margin:0 auto;scrollbar-width:none;}
+  .f-chips::-webkit-scrollbar{display:none;}
+  .chip{flex:0 0 auto;font-size:13.5px;color:var(--soft);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer;white-space:nowrap;}
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .feed{max-width:660px;margin:0 auto;padding:6px 18px 90px;}
+  .f-day{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;color:var(--faint);margin:30px 0 6px;}
+  .f-day:first-of-type{margin-top:16px;}
+  .f-post{padding:20px 0;border-bottom:1px solid var(--line);}
+  .f-post.read{opacity:.46;}
+  .f-meta{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--soft);margin-bottom:9px;}
+  .f-source{font-weight:600;color:var(--ink);}
+  .f-dot{color:var(--faint);}
+  .f-title{display:block;font-family:var(--serif);font-size:22px;line-height:1.26;font-weight:700;letter-spacing:-.01em;color:var(--ink);text-decoration:none;margin-bottom:9px;}
+  .f-hook{font-size:15.5px;line-height:1.5;color:var(--soft);margin:0 0 15px;}
+  .f-tk{list-style:none;margin:0 0 15px;padding:0;}
+  .f-tk li{position:relative;padding-left:22px;font-size:15.5px;line-height:1.52;margin-bottom:10px;}
+  .f-tk li:last-child{margin-bottom:0;}
+  .f-tk li::before{content:"";position:absolute;left:3px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .f-insight{font-size:15px;line-height:1.5;background:var(--accent-wash);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:11px 14px;margin:0 0 15px;}
+  .f-insight b{font-weight:700;}
+  .f-more{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:var(--accent);text-decoration:none;}
+</style>
+</head>
+<body>
+  <header class="f-top">
+    <span class="f-brand">Skim</span>
+    <div class="f-actions"><button>↻ Refresh</button><a href="#">Manage</a></div>
+  </header>
+
+  <div class="f-chips">
+    <button class="chip on">All</button>
+    <button class="chip">Benedict Evans</button>
+    <button class="chip">Lenny's Newsletter</button>
+    <button class="chip">Not Boring</button>
+    <button class="chip">Platformer</button>
+    <button class="chip">Stratechery</button>
+    <button class="chip">The Pragmatic Engineer</button>
+  </div>
+
+  <main class="feed">
+    <div class="f-day">Today</div>
+
+    <article class="f-post">
+      <div class="f-meta"><span class="f-source">Stratechery</span><span class="f-dot">·</span><span>2h ago</span></div>
+      <a class="f-title" href="#">The Agent Reckoning</a>
+      <p class="f-hook">Why distribution, not model quality, is becoming the decisive moat in AI products.</p>
+      <ul class="f-tk">
+        <li>Frontier-model parity means the differentiator shifts from the model to where it already sits in a user's workflow.</li>
+        <li>Incumbents win agents by default because they own the data and the surface; startups must find a wedge the incumbent can't copy without breaking its core business.</li>
+        <li>"Aggregation" logic now applies to agents: own the demand, commoditize the supply of models underneath.</li>
+      </ul>
+      <p class="f-insight"><b>The insight — </b>Bet on companies that own a workflow, not ones that own a model.</p>
+      <a class="f-more" href="#">Read the full post →</a>
+    </article>
+
+    <article class="f-post">
+      <div class="f-meta"><span class="f-source">Lenny's Newsletter</span><span class="f-dot">·</span><span>5h ago</span></div>
+      <a class="f-title" href="#">What separates the best PMs from the rest</a>
+      <p class="f-hook">A pattern from interviewing 50+ top product leaders: it's rarely about frameworks.</p>
+      <ul class="f-tk">
+        <li>The best PMs compress the distance between a customer problem and a shipped fix — they remove steps, not add process.</li>
+        <li>They earn trust by being right about small things repeatedly, which buys them latitude on big bets.</li>
+        <li>Strong opinions held loosely beats consensus-seeking; the job is judgment under uncertainty, not polling.</li>
+      </ul>
+      <p class="f-insight"><b>The insight — </b>Hire for taste and speed of learning, not framework fluency.</p>
+      <a class="f-more" href="#">Read the full post →</a>
+    </article>
+
+    <article class="f-post read">
+      <div class="f-meta"><span class="f-source">Not Boring</span><span class="f-dot">·</span><span>9h ago</span></div>
+      <a class="f-title" href="#">The Energy Supercycle</a>
+      <p class="f-hook">Why the next decade of compute is really a story about electricity.</p>
+      <ul class="f-tk">
+        <li>AI demand is turning data centers into the new heavy industry — power, not chips, becomes the binding constraint.</li>
+        <li>The winners will vertically integrate generation, cooling, and silicon the way oil majors once integrated the barrel.</li>
+        <li>Nuclear and geothermal get a second life because they offer the firm, 24/7 baseload that training runs require.</li>
+      </ul>
+      <p class="f-insight"><b>The insight — </b>Follow the megawatts; capital is repricing energy as a tech input.</p>
+      <a class="f-more" href="#">Read the full post →</a>
+    </article>
+
+    <div class="f-day">Yesterday</div>
+
+    <article class="f-post">
+      <div class="f-meta"><span class="f-source">The Pragmatic Engineer</span><span class="f-dot">·</span><span>1d ago</span></div>
+      <a class="f-title" href="#">How senior engineers actually use AI tools</a>
+      <p class="f-hook">Survey data from 200 staff+ engineers on where coding agents help — and where they hurt.</p>
+      <ul class="f-tk">
+        <li>The biggest gains are in unfamiliar code and boilerplate; the biggest risks are confident wrong answers in domains you can't check.</li>
+        <li>Reviewing AI output is now a core skill — the bottleneck moved from writing to verifying.</li>
+        <li>Teams that wrote down "where we trust agents" got more value than teams that banned or blindly adopted them.</li>
+      </ul>
+      <p class="f-insight"><b>The insight — </b>The leverage is in review discipline, not raw generation speed.</p>
+      <a class="f-more" href="#">Read the full post →</a>
+    </article>
+
+    <article class="f-post">
+      <div class="f-meta"><span class="f-source">Benedict Evans</span><span class="f-dot">·</span><span>1d ago</span></div>
+      <a class="f-title" href="#">Does AI break search?</a>
+      <p class="f-hook">If answers replace links, the entire economics of the open web shift.</p>
+      <ul class="f-tk">
+        <li>Search monetized intent by sending traffic onward; answer engines capture the intent and keep it.</li>
+        <li>Publishers lose the click but may gain a new wholesale market — licensing content to models instead of renting attention.</li>
+        <li>The unresolved question is trust: who is accountable when the answer, not the source, is wrong?</li>
+      </ul>
+      <p class="f-insight"><b>The insight — </b>The open web's ad-funded bargain is being renegotiated in real time.</p>
+      <a class="f-more" href="#">Read the full post →</a>
+    </article>
+  </main>
+</body>
+</html>
