@@ -1,3 +1,16 @@
-2026-06-11 17:08:57,687 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-11 17:08:57,687 - INFO - Already sent today (2026-06-11) — nothing to do.
+2026-06-12 15:36:10,795 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-12 15:36:10,827 - INFO - Paul Graham: Startups in 13 Sentences
+2026-06-12 15:36:10,827 - INFO - Bill Gurley: How to Miss By a Mile: An Alternative Look at Uber's Potential Market Size
+2026-06-12 15:36:10,827 - INFO - Andrew Chen: Zero to Product/Market Fit
+2026-06-12 15:36:17,807 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-12 15:36:17,827 - INFO - Summarized 'Startups in 13 Sentences' (full-text, claude-opus-4-8).
+2026-06-12 15:36:17,965 - WARNING - GET https://abovethecrowd.com/wp-json/wp/v2/posts -> HTTP 429
+2026-06-12 15:36:25,585 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-12 15:36:25,586 - INFO - Summarized 'How to Miss By a Mile: An Alternative Look at Uber's Potential Market Size' (full-text, claude-opus-4-8).
+2026-06-12 15:36:33,679 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-12 15:36:33,680 - INFO - Summarized 'Zero to Product/Market Fit' (full-text, claude-opus-4-8).
+2026-06-12 15:36:33,790 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-12 15:36:34,772 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-12 15:36:34,997 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-12 15:36:34,999 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
