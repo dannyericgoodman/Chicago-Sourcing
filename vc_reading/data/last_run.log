@@ -1,3 +1,15 @@
-2026-06-18 16:46:13,094 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-18 16:46:13,094 - INFO - Already sent today (2026-06-18) — nothing to do.
+2026-06-19 15:39:00,832 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-19 15:39:00,864 - INFO - Paul Graham: Do Things that Don't Scale
+2026-06-19 15:39:00,864 - INFO - Bill Gurley: The Dangerous Seduction of the Lifetime Value (LTV) Formula
+2026-06-19 15:39:00,864 - INFO - Andrew Chen: Zero to Product/Market Fit
+2026-06-19 15:39:09,917 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-19 15:39:09,940 - INFO - Summarized 'Do Things that Don't Scale' (full-text, claude-opus-4-8).
+2026-06-19 15:39:19,859 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-19 15:39:19,860 - INFO - Summarized 'The Dangerous Seduction of the Lifetime Value (LTV) Formula' (full-text, claude-opus-4-8).
+2026-06-19 15:39:29,244 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-19 15:39:29,245 - INFO - Summarized 'Zero to Product/Market Fit' (full-text, claude-opus-4-8).
+2026-06-19 15:39:29,422 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-19 15:39:30,092 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-19 15:39:30,388 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-19 15:39:30,389 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
