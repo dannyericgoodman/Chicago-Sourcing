@@ -1,3 +1,15 @@
-2026-06-21 15:30:12,204 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-21 15:30:12,204 - INFO - Already sent today (2026-06-21) — nothing to do.
+2026-06-22 17:12:11,028 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-22 17:12:11,061 - INFO - Paul Graham: Black Swan Farming
+2026-06-22 17:12:11,061 - INFO - Bill Gurley: The Thing I Love Most About Uber
+2026-06-22 17:12:11,061 - INFO - Andrew Chen: Growth Hacker is the new VP Marketing
+2026-06-22 17:12:19,816 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-22 17:12:19,836 - INFO - Summarized 'Black Swan Farming' (full-text, claude-opus-4-8).
+2026-06-22 17:12:28,469 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-22 17:12:28,470 - INFO - Summarized 'The Thing I Love Most About Uber' (full-text, claude-opus-4-8).
+2026-06-22 17:12:37,281 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-22 17:12:37,282 - INFO - Summarized 'Growth Hacker is the new VP Marketing' (full-text, claude-opus-4-8).
+2026-06-22 17:12:37,415 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-22 17:12:38,042 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-22 17:12:38,370 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-22 17:12:38,372 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
