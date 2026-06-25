@@ -1,3 +1,16 @@
-2026-06-24 15:59:33,744 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-24 15:59:33,744 - INFO - Already sent today (2026-06-24) — nothing to do.
+2026-06-25 15:09:03,195 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-25 15:09:03,227 - INFO - Paul Graham: How to Make Wealth
+2026-06-25 15:09:03,227 - INFO - Bill Gurley: All Markets Are Not Created Equal
+2026-06-25 15:09:03,228 - INFO - Andrew Chen: Minimize your Time to Product/Market Fit
+2026-06-25 15:09:11,906 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-25 15:09:11,927 - INFO - Summarized 'How to Make Wealth' (full-text, claude-opus-4-8).
+2026-06-25 15:09:12,131 - WARNING - GET https://abovethecrowd.com/wp-json/wp/v2/posts -> HTTP 429
+2026-06-25 15:09:20,891 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-25 15:09:20,892 - INFO - Summarized 'All Markets Are Not Created Equal' (full-text, claude-opus-4-8).
+2026-06-25 15:09:31,044 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-25 15:09:31,045 - INFO - Summarized 'Minimize your Time to Product/Market Fit' (full-text, claude-opus-4-8).
+2026-06-25 15:09:31,221 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-25 15:09:33,122 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-25 15:09:33,418 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-25 15:09:33,419 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
