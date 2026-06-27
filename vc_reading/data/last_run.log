@@ -1,3 +1,15 @@
-2026-06-26 15:58:14,398 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-26 15:58:14,398 - INFO - Already sent today (2026-06-26) — nothing to do.
+2026-06-27 14:04:31,446 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-27 14:04:31,478 - INFO - Paul Graham: Startups in 13 Sentences
+2026-06-27 14:04:31,478 - INFO - Bill Gurley: The Dangerous Seduction of the Lifetime Value (LTV) Formula
+2026-06-27 14:04:31,479 - INFO - Andrew Chen: What to do when growth stalls
+2026-06-27 14:04:39,482 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-27 14:04:39,507 - INFO - Summarized 'Startups in 13 Sentences' (full-text, claude-opus-4-8).
+2026-06-27 14:04:47,866 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-27 14:04:47,867 - INFO - Summarized 'The Dangerous Seduction of the Lifetime Value (LTV) Formula' (full-text, claude-opus-4-8).
+2026-06-27 14:04:56,787 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-27 14:04:56,788 - INFO - Summarized 'What to do when growth stalls' (full-text, claude-opus-4-8).
+2026-06-27 14:04:56,960 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-27 14:04:58,351 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-27 14:04:58,560 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-27 14:04:58,561 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
