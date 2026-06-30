@@ -1,3 +1,16 @@
-2026-06-29 16:46:35,138 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-29 16:46:35,138 - INFO - Already sent today (2026-06-29) — nothing to do.
+2026-06-30 14:41:09,755 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-06-30 14:41:09,788 - INFO - Paul Graham: Maker's Schedule, Manager's Schedule
+2026-06-30 14:41:09,788 - INFO - Bill Gurley: The Thing I Love Most About Uber
+2026-06-30 14:41:09,788 - INFO - Andrew Chen: The Next Feature Fallacy
+2026-06-30 14:41:19,524 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-30 14:41:19,548 - INFO - Summarized 'Maker's Schedule, Manager's Schedule' (full-text, claude-opus-4-8).
+2026-06-30 14:41:19,727 - WARNING - GET https://abovethecrowd.com/wp-json/wp/v2/posts -> HTTP 429
+2026-06-30 14:41:29,407 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-30 14:41:29,408 - INFO - Summarized 'The Thing I Love Most About Uber' (full-text, claude-opus-4-8).
+2026-06-30 14:41:37,487 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-06-30 14:41:37,488 - INFO - Summarized 'The Next Feature Fallacy' (full-text, claude-opus-4-8).
+2026-06-30 14:41:37,743 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-06-30 14:41:39,879 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-06-30 14:41:40,132 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-06-30 14:41:40,133 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
