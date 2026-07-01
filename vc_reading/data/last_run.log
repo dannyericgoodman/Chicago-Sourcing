@@ -1,3 +1,15 @@
-2026-06-30 16:10:14,372 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-06-30 16:10:14,372 - INFO - Already sent today (2026-06-30) — nothing to do.
+2026-07-01 15:09:49,985 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-07-01 15:09:50,018 - INFO - Paul Graham: How to Start a Startup
+2026-07-01 15:09:50,018 - INFO - Bill Gurley: On the Road to Recap
+2026-07-01 15:09:50,018 - INFO - Andrew Chen: New data shows losing 80% of mobile users is normal
+2026-07-01 15:09:58,675 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-01 15:09:58,699 - INFO - Summarized 'How to Start a Startup' (full-text, claude-opus-4-8).
+2026-07-01 15:10:08,442 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-01 15:10:08,443 - INFO - Summarized 'On the Road to Recap' (full-text, claude-opus-4-8).
+2026-07-01 15:10:17,240 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-01 15:10:17,241 - INFO - Summarized 'New data shows losing 80% of mobile users is normal' (full-text, claude-opus-4-8).
+2026-07-01 15:10:17,433 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-07-01 15:10:18,577 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-07-01 15:10:18,845 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-07-01 15:10:18,846 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
