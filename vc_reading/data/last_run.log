@@ -1,3 +1,15 @@
-2026-07-01 16:09:31,045 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-07-01 16:09:31,045 - INFO - Already sent today (2026-07-01) — nothing to do.
+2026-07-02 14:26:34,622 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-07-02 14:26:34,647 - INFO - Paul Graham: How to Think for Yourself
+2026-07-02 14:26:34,648 - INFO - Bill Gurley: Why Facebook Clearly Belongs in the 10X Revenue Club
+2026-07-02 14:26:34,648 - INFO - Andrew Chen: Minimize your Time to Product/Market Fit
+2026-07-02 14:26:43,659 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-02 14:26:43,677 - INFO - Summarized 'How to Think for Yourself' (full-text, claude-opus-4-8).
+2026-07-02 14:26:52,880 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-02 14:26:52,881 - INFO - Summarized 'Why Facebook Clearly Belongs in the 10X Revenue Club' (full-text, claude-opus-4-8).
+2026-07-02 14:27:00,816 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-02 14:27:00,818 - INFO - Summarized 'Minimize your Time to Product/Market Fit' (full-text, claude-opus-4-8).
+2026-07-02 14:27:00,992 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-07-02 14:27:02,539 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-07-02 14:27:02,887 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-07-02 14:27:02,888 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
