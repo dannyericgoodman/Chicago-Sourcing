@@ -1,3 +1,16 @@
-2026-07-02 15:54:50,112 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
-2026-07-02 15:54:50,112 - INFO - Already sent today (2026-07-02) — nothing to do.
+2026-07-03 14:29:47,561 - INFO - Preflight: ANTHROPIC_API_KEY=SET | RESEND_API_KEY=SET | GMAIL creds=SET | recipient=danny.eric.goodman@gmail.com | NOTION=SET
+2026-07-03 14:29:47,594 - INFO - Paul Graham: Startup = Growth
+2026-07-03 14:29:47,594 - INFO - Bill Gurley: All Markets Are Not Created Equal
+2026-07-03 14:29:47,594 - INFO - Andrew Chen: Zero to Product/Market Fit
+2026-07-03 14:29:56,021 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-03 14:29:56,048 - INFO - Summarized 'Startup = Growth' (full-text, claude-opus-4-8).
+2026-07-03 14:29:56,185 - WARNING - GET https://abovethecrowd.com/wp-json/wp/v2/posts -> HTTP 429
+2026-07-03 14:30:07,308 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-03 14:30:07,309 - INFO - Summarized 'All Markets Are Not Created Equal' (full-text, claude-opus-4-8).
+2026-07-03 14:30:18,740 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2026-07-03 14:30:18,741 - INFO - Summarized 'Zero to Product/Market Fit' (full-text, claude-opus-4-8).
+2026-07-03 14:30:18,920 - ERROR - Resend send FAILED: HTTP 422 — {"statusCode":422,"message":"The domain is invalid","name":"validation_error"}
+2026-07-03 14:30:21,569 - INFO - Email sent via Gmail to danny.eric.goodman@gmail.com
+2026-07-03 14:30:21,843 - WARNING - Notion archive failed: HTTP 404 — {"object":"error","status":404,"code":"object_not_found","message":"Could not find database with ID: f1571e20-921b-4e52-86c9-3a9ab45f3245. Make sure the relevant pages and databases are shared with yo
+2026-07-03 14:30:21,844 - INFO - Done — emailed 3 essays.
 === exit_code=0 ===
